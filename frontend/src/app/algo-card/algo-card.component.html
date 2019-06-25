@@ -1,0 +1,16 @@
+<li class="algo-card col-centered">
+  <div class="algo-card-view" (mouseleave)="stopVideo(video)">
+    <video #video class="algo-card-video" src="{{algorithm.video}}" 
+      type="video/mp4" muted (mouseover)="playVideo(video)"></video>
+    <div *ngIf="overlay" class="algo-card-video-cta">Learn</div>
+  </div>
+  <div class="algo-card-info col-centered">
+    <div class="algo-card-name">
+      <h3>{{ algorithm.name }}</h3>
+    </div>
+    <div class="algo-card-tags">
+        <div *ngFor="let tag of algorithm.tags" 
+          class="algo-card-tag" (click)="tagfilter.emit(tag)">{{ tag }}</div>
+    </div>
+  </div>
+</li>

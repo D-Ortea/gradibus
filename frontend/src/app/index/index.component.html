@@ -1,0 +1,30 @@
+<div class="index-logo">
+  <h1 class="index-logo-title">Gradibus</h1>
+  <h2 class="index-logo-subtitle">Learning algorithms through interactive interfaces</h2>
+</div>
+<div class="algos">
+    <div class="algo-search-bar" #searchBar>
+      <input type="text" name="algo-search" id="algo-search" placeholder="search"
+        [(ngModel)]="searchTerm" 
+        (focus)="focusSearchBar(searchBar)"
+        (blur)="blurSearchBar(searchBar)"
+        (input)="search()">
+      <div class="tag-button" (click)="showTags()">
+        tags
+      </div>
+    </div>
+    <div class="tag-filter-list">
+      <div *ngFor="let tag of tagFilters" class="tag-filter">
+        <div class="tag-text">{{tag}}</div>
+        <div class="tag-remove-filter" (click)="removeFilter(tag)">x</div>
+      </div>
+    </div>
+    <div *ngIf="tagsVisible" class="tag-list">
+      <div *ngFor="let tag of tags" class="tag" (click)="filterByTag(tag)">{{tag}}</div>
+    </div>
+    <ul class="algo-list">
+      <div *ngFor="let algo of algoList" class="algo-card-wrapper">
+        <app-algo-card [algorithm]="algo" (tagfilter)="filterByTag($event)"></app-algo-card>
+      </div>
+    </ul>
+</div>

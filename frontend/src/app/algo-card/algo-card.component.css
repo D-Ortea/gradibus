@@ -1,0 +1,75 @@
+algo-card , .algo-card *{
+  outline: none;
+}
+
+.algo-card {
+  background-color: transparent;
+  margin: 1rem 0.5rem;
+  max-width: 16rem;
+}
+
+.algo-card-name h3 {
+  font-size: 1.1rem;
+  margin: 0;
+  padding: 0.5rem;
+  width: 100%;
+}
+
+.algo-card-view {
+  cursor: pointer;
+  height: 9rem;
+  position: relative;
+  width: 16rem;
+}
+
+.algo-card-video {
+  border-radius: 7% 7% 0 0;    
+  object-fit: fill;
+  height: 9rem;
+  width: 16rem;
+  z-index: 0;
+}
+
+.algo-card-video-cta {
+  background-color: rgba(200, 200, 200, 0.3);
+  border-radius: 10px;
+  bottom: 0.5rem;
+  color: black;
+  padding: 0.2rem 0.4rem;
+  position: absolute;
+  right: 0.5rem;
+  z-index: 1;
+}
+
+.algo-card-info {
+  padding: 0.3rem;
+  width: 100%;
+}
+
+.algo-card-tags {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+
+.algo-card-tag {
+  background-color: lightgray;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 0.8rem;
+  font-size: 0.8rem;
+  margin: 0.2rem;
+  padding: 0.3rem 0.6rem;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.algo-card-tag:hover {
+  background-color: orangered;
+  cursor: pointer;
+}
+
+.col-centered {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+}

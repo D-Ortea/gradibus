@@ -1,0 +1,125 @@
+.index-logo {
+  text-align: center;
+}
+
+.index-logo-title {
+  font-size: 5rem;
+  margin-bottom: 0;
+}
+
+.index-logo-subtitle {
+  color: rgba(32,33,36,0.7);
+  font-size: 1.2rem;
+  margin-top: 0;
+}
+
+.algos {
+  text-align: center;
+}
+
+.algo-search-bar {
+  align-items: center;
+  border: 1px solid #dfe1e5;
+  border-radius: 20px;
+  display: inline-flex;
+  justify-content: space-around;
+  margin-top: 1rem;
+  padding: 0 0 0 1rem;
+}
+
+.algo-search-bar:hover {
+  box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
+  border-color: rgba(223,225,229,0);
+}
+
+.algo-search-bar input {
+  border: none;
+  margin: 0;
+  outline: none;
+  padding: 0;
+  width: 27rem;
+}
+
+.tag-filter-list {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+
+.tag-filter, .tag {
+  background-color: lightgray;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 0.8rem;
+  font-size: 0.8rem;
+}
+
+.tag-filter {
+  display: flex;
+  flex-direction: row;
+  margin: 0.5rem;
+}
+
+.tag-text, .tag-remove-filter {
+  align-self: center;
+}
+
+.tag-text {
+  padding-left: 0.6rem;
+}
+
+.tag-remove-filter {
+  border: 1px solid transparent;
+  border-left: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 0 0.8rem 0.8rem 0;
+  background-color: gray;
+  color: #eee;
+  cursor: pointer;
+  padding: 0.15rem 0.3rem;
+  margin-left: 0.5rem;
+  font-size: 1.3rem;
+}
+
+.tag-remove-filter:hover {
+  border: 1px solid white;
+}
+
+.tag-button {
+  background-color: lightgray;
+  border-left: 1px solid #dfe1e5;
+  border-radius: 20px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding: 0.8rem 1rem;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.tag-button:hover {
+  background-color: orangered;
+  cursor: pointer;
+}
+
+.tag-list {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  margin: 1rem auto;
+  max-width: 60%;
+}
+
+.tag {
+  padding: 0.3rem 0.6rem;
+  margin: 0.3rem;
+}
+
+.tag:hover {
+  background-color: orangered;
+  cursor: pointer;
+}
+
+.algo-list {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  margin-top: 3rem;
+}
