@@ -1,9 +1,11 @@
 <li class="algo-card col-centered">
-  <div class="algo-card-view" (mouseleave)="stopVideo(video)">
-    <video #video class="algo-card-video" src="{{algorithm.video}}" 
-      type="video/mp4" muted (mouseover)="playVideo(video)"></video>
-    <div *ngIf="overlay" class="algo-card-video-cta">Learn</div>
-  </div>
+  <a routerLink="algorithms/{{algorithm.name}}/play">
+    <div class="algo-card-view" (mouseleave)="stopVideo(video)">
+      <video #video class="algo-card-video" src="{{algorithm.video}}" 
+        type="video/mp4" muted (mouseover)="playVideo(video)"></video>
+      <div *ngIf="overlay" class="algo-card-video-cta">Learn</div>
+    </div>
+  </a>
   <div class="algo-card-info col-centered">
     <div class="algo-card-name">
       <h3>{{ algorithm.name }}</h3>

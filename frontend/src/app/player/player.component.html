@@ -1,0 +1,19 @@
+<div class="player">
+  <img src="/assets/player-controls/play-50.png" class="player-btn" 
+    alt="play/pause">
+  <input type="range" min="0" max="1000" class="speed-slider"
+    value="50">
+  <img src="/assets/player-controls/previous-50.png" alt="previous step">
+  <input type="range" min="0" max="1000" class="step-slider"
+    value="0">
+  <img src="/assets/player-controls/next-50.png" alt="next step">  
+</div>
+
+<app-input [algoData]="getSelectedAlgorithm()"></app-input>
+
+<p *ngIf="solution">
+  {{ solution }}
+</p>
+
+<h2>Main rendering area</h2>
+<div class="render-area"></div>

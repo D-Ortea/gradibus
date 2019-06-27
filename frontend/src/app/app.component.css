@@ -4,7 +4,7 @@
   flex-direction: column;
 }
 
-.header, .footer {
+.header nav, .footer {
   background-color: var(--main-bg-color);
   box-sizing: border-box;
   color: var(--main-color);
@@ -13,7 +13,7 @@
   width: 100%;
 }
 
-.header {
+.header nav {
   align-items: last baseline;
   display: flex;
   justify-content: space-between;

@@ -8,7 +8,7 @@
         [(ngModel)]="searchTerm" 
         (focus)="focusSearchBar(searchBar)"
         (blur)="blurSearchBar(searchBar)"
-        (input)="search()">
+        (input)="filter()">
       <div class="tag-button" (click)="showTags()">
         tags
       </div>
@@ -20,11 +20,11 @@
       </div>
     </div>
     <div *ngIf="tagsVisible" class="tag-list">
-      <div *ngFor="let tag of tags" class="tag" (click)="filterByTag(tag)">{{tag}}</div>
+      <div *ngFor="let tag of tags" class="tag" (click)="addFilter(tag)">{{tag}}</div>
     </div>
     <ul class="algo-list">
-      <div *ngFor="let algo of algoList" class="algo-card-wrapper">
-        <app-algo-card [algorithm]="algo" (tagfilter)="filterByTag($event)"></app-algo-card>
+      <div *ngFor="let algo of filteredAlgorithms" class="algo-card-wrapper">
+        <app-algo-card [algorithm]="algo" (tagfilter)="addFilter($event)"></app-algo-card>
       </div>
     </ul>
 </div>

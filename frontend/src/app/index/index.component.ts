@@ -1,15 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-const algorithms = [
-  {name: 'Knapsack Problem' ,video: '/assets/algo-videos//knapsack-problem.mp4', 
-    tags: ['dynamic programming', 'knapsack']},
-  {name: 'Binary Search Tree', video: '/assets/algo-videos//BST.mp4', tags: ['tree','BST', 'search', 'branch and bound']},
-  {name: 'Bubble Sort', video: '/assets/algo-videos//bubble-sort.mp4', tags: ['sort', 'brute force']},
-  {name: 'Merge Sort', video: '/assets/algo-videos//merge-sort.mp4', tags: ['sort', 'divide and conquer']},
-  {name: 'Quicksort', video: '/assets/algo-videos//quicksort.mp4', tags: ['sort', 'divide and conquer']},
-  {name: 'Radix Sort', video: '/assets/algo-videos//radix-sort.mp4', tags: ['sort', 'divide and conquer']},
-  {name: 'Pidgeonhole Sort', video: '/assets/algo-videos//pidgeonhole-sort.mp4', tags: ['sort', 'divide and conquer']},
-];
+import { AlgorithmService } from '../algorithm.service';
 
 @Component({
   selector: 'app-index',
@@ -18,54 +8,53 @@ const algorithms = [
 })
 export class IndexComponent implements OnInit {
 
-  tags =  [...new Set(algorithms.reduce((acc, algo) => acc = [...acc, ...algo.tags], []))];
+  tags =  [...new Set(this.algoService.algorithms.reduce((acc, algo) => acc = [...acc, ...algo.tags], []))];
   tagFilters = [];
   searchTerm = '';
   tagsVisible = false;
 
-  algoList = Array.from(algorithms);
+  filteredAlgorithms = Array.from(this.algoService.algorithms);
 
-  constructor() { }
+  constructor(
+    private algoService: AlgorithmService
+  ) { }
 
   ngOnInit() {
   }
 
-  focusSearchBar(searchBar) {
+  focusSearchBar(searchBar: HTMLDivElement) {
     searchBar.style.boxShadow = '0 1px 6px 0 rgba(32,33,36,0.28)';
   }
 
-  blurSearchBar(searchBar) {
+  blurSearchBar(searchBar: HTMLDivElement) {
     searchBar.style.boxShadow = '';
   }
 
-  filterByTag(tagText: string) {
+  addFilter(tagText: string) {
     if (this.tagFilters.includes(tagText)) { return; }
 
     this.tagFilters = [...this.tagFilters, tagText];
-
-    this.algoList = this.algoList.filter(el => 
-      this.tagFilters.find(tag => el.tags.includes(tag)) 
-      || this.tagFilters.length === 0);
+    this.filter();
   }
 
-  removeFilter(tagText) {
+  removeFilter(tagText: string) {
     this.tagFilters = this.tagFilters.filter(tag => tag !== tagText);
-    this.algoList = this.findAlgorithms();
+    this.filter();
   }
 
-  search() {
-    this.algoList = this.findAlgorithms();
-  }
-
-  findAlgorithms() {
+  filter() {
     const term = this.searchTerm.toLowerCase();
-    return algorithms.filter(
-      el => (el.name.toLowerCase().includes(term)
-      || el.tags.reduce(
-        (acc: boolean, tag: string) => acc = acc
-        || tag.toLowerCase().includes(term), false))
-      && (this.tagFilters.find(tag => el.tags.includes(tag))
-        || this.tagFilters.length === 0));
+    const algorithms = this.algoService.getAlgorithms();
+
+    const includesTerm = name => name.toLowerCase().includes(term);
+    const tagsIncludeTerm = el => el.tags.reduce(
+      (acc: boolean, tag: string) => acc = acc || includesTerm(tag), false);
+
+    const applyTagFilters = el => this.tagFilters
+      .find(tag => el.tags.includes(tag)) || this.tagFilters.length === 0;
+
+    this.filteredAlgorithms = algorithms.filter(el => includesTerm(el.name) 
+      || tagsIncludeTerm(el)).filter(el => applyTagFilters(el));
   }
 
   showTags() {
