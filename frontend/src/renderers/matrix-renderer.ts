@@ -1,6 +1,9 @@
-export class MatrixRederer {
+import { Renderer } from './renderer';
+
+export class MatrixRenderer implements Renderer {
   matrix: any[];
-  constructor(){ }
+
+  constructor() { }
 
   initialize(matrix) {
     // this.renderArea
@@ -9,6 +12,5 @@ export class MatrixRederer {
   }
 
   render() {
-    // if 
   }
 }

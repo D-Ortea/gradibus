@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { RenderService } from '../render.service';
 
 @Component({
   selector: 'app-render',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RenderComponent implements OnInit {
 
-  constructor() { }
+  @ViewChild('renderArea', {static: true}) renderArea: ElementRef;
 
+  constructor(private renderService: RenderService) {
+  }
+  
   ngOnInit() {
+  }
+  
+  ngAfterViewInit(): void {
   }
 
 }

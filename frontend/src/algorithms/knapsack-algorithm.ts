@@ -1,4 +1,5 @@
 import { Algorithm } from './algorithm';
+import { Renderer } from 'src/renderers/renderer';
 
 const pseudocode = 
   `for j from 0 to W do:
@@ -10,6 +11,7 @@ const pseudocode =
               m[i, j] := m[i-1, j]
           else:
               m[i, j] := max(m[i-1, j], m[i-1, j-w[i]] + v[i])`;
+  
 
 const printMatrix = matrix => matrix.map(row => row.toString().replace(/,/g, ' ') + '\n')
   .toString().replace(/,/g, '');
@@ -24,7 +26,8 @@ const zeroes = dimensions => {
   return arr;
 }
 
-export class KnapsackAlgorithm implements Algorithm{
+export class KnapsackAlgorithm implements Algorithm {
+  public renderer: Renderer;
 
   constructor(
     private values: number[], 
@@ -35,7 +38,7 @@ export class KnapsackAlgorithm implements Algorithm{
 
   *solve(): IterableIterator<string> {
     let k: any[] = zeroes([this.values.length + 1, this.capacity + 1]);
-    // Instantiate renderer
+
 
     // yield this.delayAndHighlight(1)
 
@@ -71,6 +74,7 @@ export class KnapsackAlgorithm implements Algorithm{
     }
 
     console.log(printMatrix(k));
+    this.renderer.render();
     return this.findSolution(keep, k);
   }
 
