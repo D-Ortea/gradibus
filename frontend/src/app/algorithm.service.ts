@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Algorithm } from 'src/algorithms/algorithm';
-import { KnapsackInputComponent } from './knapsack-input/knapsack-input.component';
+import { KnapsackInputComponent } from './input-components/knapsack-input/knapsack-input.component';
 import { BinarySearchTreeComponent } from './binary-search-tree/binary-search-tree.component';
 
 @Injectable({

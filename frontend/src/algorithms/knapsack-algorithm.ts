@@ -1,5 +1,6 @@
 import { Algorithm } from './algorithm';
 import { Renderer } from 'src/renderers/renderer';
+import { MatrixRendererComponent } from 'src/app/render-components/matrix-renderer/matrix-renderer.component';
 
 const pseudocode = 
   `for j from 0 to W do:
@@ -27,12 +28,14 @@ const zeroes = dimensions => {
 }
 
 export class KnapsackAlgorithm implements Algorithm {
-  public renderer: Renderer;
+  renderer: Renderer;
+  renderType = MatrixRendererComponent;
 
   constructor(
     private values: number[], 
     private weights: number[],
-    private capacity: number) {
+    private capacity: number
+    ) {
     // Code.loadPseudocode(pseudocode);
   }
 

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { KnapsackAlgorithm } from 'src/algorithms/knapsack-algorithm';
 import {AlgorithmService, AlgorithmMetadata } from '../algorithm.service';
 
 @Component({
@@ -9,7 +8,7 @@ import {AlgorithmService, AlgorithmMetadata } from '../algorithm.service';
   styleUrls: ['./player.component.css']
 })
 export class PlayerComponent implements OnInit {
-  algoName: string;
+  algorithmInput;
 
   constructor(
     private route: ActivatedRoute,
@@ -17,15 +16,12 @@ export class PlayerComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.algoName = this.route.snapshot.paramMap.get('algo');    
+    const algoName = this.route.snapshot.paramMap.get('algo');    
+    this.algorithmInput = this.algoService.getAlgorithm(algoName).component;
   }
 
   showSolution() {
     console.log('solution');
-  }
-
-  getSelectedAlgorithm(): AlgorithmMetadata {
-    return this.algoService.getAlgorithm(this.algoName);
   }
 }
 ///////// PROBLEM 1 /////////////////

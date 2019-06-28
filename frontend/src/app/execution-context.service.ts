@@ -17,5 +17,7 @@ export class ExecutionContextService {
     const gen = this.algorithm.solve();
     console.log(gen.next());
     console.log(gen.next());
+
+   
   }
 }

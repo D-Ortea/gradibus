@@ -1,6 +1,7 @@
-import { Component, OnInit, ViewChild, Input, ComponentFactoryResolver } from '@angular/core';
-import { InputDirective } from '../input.directive';
-import { AlgorithmMetadata } from '../algorithm.service';
+import { Component, OnInit } from '@angular/core';
+import { ExecutionContextService } from 'src/app/execution-context.service';
+import { RenderService } from 'src/app/render.service';
+import { Algorithm } from 'src/algorithms/algorithm';
 
 @Component({
   selector: 'app-input',
@@ -9,24 +10,21 @@ import { AlgorithmMetadata } from '../algorithm.service';
 })
 export class InputComponent implements OnInit {
 
-  @Input() algoData: AlgorithmMetadata;
+  constructor(
+    private executionContext: ExecutionContextService,
+    private renderService: RenderService) { }
 
-  @ViewChild(InputDirective, { static: true }) inputHost: InputDirective;
+  ngOnInit() { }
 
-  constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
 
-  ngOnInit() {
-    this.loadComponent();
-  }
-
-  loadComponent() {
-    const componentFactory = this.componentFactoryResolver
-      .resolveComponentFactory(this.algoData.component);
-
-    const viewContainerRef = this.inputHost.viewContainerRef;
-    viewContainerRef.clear();
-
-    viewContainerRef.createComponent(componentFactory);
+  loadAlgorithmContext(algo: Algorithm, options: Options) {
+    this.renderService.sendAlgorithm(algo);
+    this.renderService.getRenderer().subscribe(renderer => {
+      algo.renderer = renderer;
+      this.executionContext.setUpContext(algo, options)
+    });
   }
 
 }
+
+type Options = { autoplay: boolean, skip: boolean, delete: boolean };

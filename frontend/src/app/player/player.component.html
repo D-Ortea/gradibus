@@ -9,7 +9,7 @@
   <img src="/assets/player-controls/next-50.png" alt="next step">  
 </div>
 
-<app-input [algoData]="getSelectedAlgorithm()"></app-input>
+<ng-container *ngComponentOutlet="algorithmInput"></ng-container>
 
 <p *ngIf="solution">
   {{ solution }}

@@ -8,15 +8,17 @@ import { RenderService } from '../render.service';
 })
 export class RenderComponent implements OnInit {
 
+  rendererComponent;
+
   @ViewChild('renderArea', {static: true}) renderArea: ElementRef;
 
   constructor(private renderService: RenderService) {
   }
   
   ngOnInit() {
-  }
-  
-  ngAfterViewInit(): void {
+    this.renderService.getAlgorithm().subscribe(algorithm => {
+      this.rendererComponent = algorithm.renderType;
+    });
   }
 
 }

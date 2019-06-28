@@ -9,10 +9,11 @@ import { IndexComponent } from './index/index.component';
 import { AlgoCardComponent } from './algo-card/algo-card.component';
 import { PlayerComponent } from './player/player.component';
 import { InputComponent } from './input/input.component';
-import { KnapsackInputComponent } from './knapsack-input/knapsack-input.component';
+import { KnapsackInputComponent } from './input-components/knapsack-input/knapsack-input.component';
 import { InputDirective } from './input.directive';
 import { BinarySearchTreeComponent } from './binary-search-tree/binary-search-tree.component';
 import { RenderComponent } from './render/render.component';
+import { MatrixRendererComponent } from './render-components/matrix-renderer/matrix-renderer.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,9 @@ import { RenderComponent } from './render/render.component';
     KnapsackInputComponent,
     InputDirective,
     BinarySearchTreeComponent,
-    RenderComponent
+    RenderComponent,
+    MatrixRendererComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -32,7 +35,11 @@ import { RenderComponent } from './render/render.component';
     HttpClientModule,
     AppRoutingModule
   ],
-  entryComponents: [ KnapsackInputComponent, BinarySearchTreeComponent ],
+  entryComponents: [ 
+     KnapsackInputComponent,
+     BinarySearchTreeComponent,
+     MatrixRendererComponent,
+      ],
   providers: [],
   bootstrap: [AppComponent]
 })
