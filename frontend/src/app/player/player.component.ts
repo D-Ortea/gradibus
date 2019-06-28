@@ -1,18 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {AlgorithmService, AlgorithmMetadata } from '../algorithm.service';
+import {AlgorithmService } from '../algorithm.service';
+import { ExecutionContextService } from '../execution-context.service';
 
 @Component({
   selector: 'app-player',
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.css']
 })
-export class PlayerComponent implements OnInit {
+export class PlayerComponent implements OnInit, AfterViewInit {
   algorithmInput;
+
+  speed: number = 50;
+  step: number;
+  maxStep: number = 100;
 
   constructor(
     private route: ActivatedRoute,
-    private algoService: AlgorithmService
+    private algoService: AlgorithmService,
+    private context: ExecutionContextService
   ) { }
 
   ngOnInit() {
@@ -20,8 +26,51 @@ export class PlayerComponent implements OnInit {
     this.algorithmInput = this.algoService.getAlgorithm(algoName).component;
   }
 
+  ngAfterViewInit() {
+    this.context.getContext().subscribe(stepInfo => {
+      if (stepInfo.includes('Total')) {
+        this.maxStep = +stepInfo.split(' ')[1];
+      } else {
+        this.step = +stepInfo;
+      }
+    });
+  }
+
   showSolution() {
     console.log('solution');
+  }
+
+  play(stopPoint?: number) {
+    this.context.play(stopPoint).then(solution => {
+      if (solution) { console.log(`The solution was ${solution}`); }
+    });
+  }
+
+  playClick() {
+    this.context.setSpeed(this.speed);
+    this.play();
+  }
+
+  pauseClick() {
+    this.context.pause();
+  }
+
+  changeSpeed() {
+    if(!this.context.isPaused()) { this.context.setSpeed(this.speed); };
+  }
+
+  changeStep() {
+    this.play(this.step);
+  }
+
+  nextStep() {
+    if (this.step < this.maxStep) { this.step++; }
+    this.changeStep();
+  }
+
+  previousStep() {
+    if (this.step != 0) { this.step--; }
+    this.changeStep();
   }
 }
 ///////// PROBLEM 1 /////////////////

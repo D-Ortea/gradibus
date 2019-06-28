@@ -1,11 +1,16 @@
 <div class="player">
-  <img src="/assets/player-controls/play-50.png" class="player-btn" 
-    alt="play/pause">
-  <input type="range" min="0" max="1000" class="speed-slider"
-    value="50">
+  <img *ngIf="context.isPaused(); else playBtn"
+  src="/assets/player-controls/pause-50.png" class="pause-btn" 
+  alt="pause button">
+  <ng-template #playBtn>
+    <img src="/assets/player-controls/play-50.png" class="player-btn" 
+      alt="play button">
+  </ng-template>
+  <input type="range" min="0" max="2000" class="speed-slider"
+    [(ngModel)]="speed" (input)="changeSpeed()">
   <img src="/assets/player-controls/previous-50.png" alt="previous step">
-  <input type="range" min="0" max="1000" class="step-slider"
-    value="0">
+  <input type="range" min="0" [max]="maxStep" class="step-slider"
+    [(ngModel)]="step" (input)="changeStep()">
   <img src="/assets/player-controls/next-50.png" alt="next step">  
 </div>
 

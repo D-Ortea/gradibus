@@ -21,6 +21,9 @@ export class KnapsackInputComponent extends InputComponent implements OnInit {
       { autoplay: true, skip: true, delete: true });
   }
 
+  solve() {
+    this.executionContext.play();
+  }
   
 }
 

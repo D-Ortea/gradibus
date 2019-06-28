@@ -1,6 +1,6 @@
 import { Algorithm } from './algorithm';
-import { Renderer } from 'src/renderers/renderer';
 import { MatrixRendererComponent } from 'src/app/render-components/matrix-renderer/matrix-renderer.component';
+import { ExecutionContextService } from 'src/app/execution-context.service';
 
 const pseudocode = 
   `for j from 0 to W do:
@@ -28,7 +28,8 @@ const zeroes = dimensions => {
 }
 
 export class KnapsackAlgorithm implements Algorithm {
-  renderer: Renderer;
+  player: ExecutionContextService;
+  renderer: MatrixRendererComponent;
   renderType = MatrixRendererComponent;
 
   constructor(
@@ -39,9 +40,9 @@ export class KnapsackAlgorithm implements Algorithm {
     // Code.loadPseudocode(pseudocode);
   }
 
-  *solve(): IterableIterator<string> {
+  *solve(): IterableIterator<any> {
     let k: any[] = zeroes([this.values.length + 1, this.capacity + 1]);
-
+    this.renderer.initialize(k);
 
     // yield this.delayAndHighlight(1)
 
@@ -65,14 +66,14 @@ export class KnapsackAlgorithm implements Algorithm {
           // yield this.delayAndHighlight(6);
         }
         
-        // yield player.delay();
-        // view.mark(i - 1, j);
-        // yield player.delay();
-        // view.alter(i, j, k[i][j]);
-        // yield player.delay();
-        // view.unMark(i - 1, j);
-        // yield player.delay();
-        // view.unAlter(i, j);
+        yield this.player.delay();
+        this.renderer.mark(i - 1, j);
+        yield this.player.delay();
+        this.renderer.alter(i, j, k[i][j]);
+        yield this.player.delay();
+        this.renderer.unMark(i - 1, j);
+        yield this.player.delay();
+        this.renderer.unAlter(i, j);
       }
     }
 
@@ -95,7 +96,7 @@ export class KnapsackAlgorithm implements Algorithm {
 
   async delayAndHighlight(index) {
     // Code.highlightLine(index);
-    // await player.delay();
+    // await this.player.delay();
     // Code.stopHighlightingLine(index);
   }
 

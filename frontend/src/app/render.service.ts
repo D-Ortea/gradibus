@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Algorithm } from '../algorithms/algorithm';
 import { Subject, Observable } from 'rxjs';
-import { Renderer } from 'src/renderers/renderer';
+import { Renderer } from 'src/app/render-components/renderer';
 
 @Injectable({
   providedIn: 'root'
