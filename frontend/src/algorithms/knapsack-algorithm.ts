@@ -78,7 +78,6 @@ export class KnapsackAlgorithm implements Algorithm {
     }
 
     console.log(printMatrix(k));
-    this.renderer.render();
     return this.findSolution(keep, k);
   }
 

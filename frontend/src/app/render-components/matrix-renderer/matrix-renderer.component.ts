@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Renderer } from '../renderer';
 import { RenderService } from 'src/app/render.service';
-import { HistoryService } from 'src/app/history.service';
 import * as d3 from "d3";
 
 @Component({
@@ -10,14 +9,15 @@ import * as d3 from "d3";
   styleUrls: ['./matrix-renderer.component.css']
 })
 export class MatrixRendererComponent implements OnInit, Renderer {
-  noRender: false;
+  noRender: boolean;
   generator: IterableIterator<any>;
   matrix: Cell[][];
 
   constructor(
-    private renderService: RenderService,
-    private history: HistoryService
-    ) { }
+    private renderService: RenderService
+    ) {
+      this.noRender = true;
+     }
 
   ngOnInit() {
     this.renderService.sendRenderer(this);
@@ -38,10 +38,7 @@ export class MatrixRendererComponent implements OnInit, Renderer {
   }
 
   render() {
-    if (this.noRender) { 
-      this.history.addStep(this);
-      return;
-    }
+    if (this.noRender) { return; }
     if (!this.generator) { this.generator = this._render(); }
 
     return this.generator.next();
@@ -67,7 +64,7 @@ export class MatrixRendererComponent implements OnInit, Renderer {
   }
 
   private parseClass(cell: Cell) {
-    return `${cell.changed ? 'changed' : ''} ${cell.marked ? 'marked' : ''}`;
+    return `${cell.changed ? 'changed' : ''} ${cell.marked ? 'marked' : ''}`.trim();
   }
 
   reset() {
@@ -78,7 +75,7 @@ export class MatrixRendererComponent implements OnInit, Renderer {
     }));
   }
 
-  alter(x: number, y: number, newValue) {
+  alter(x: number, y: number, newValue: any) {
     this.matrix[x][y].value = newValue;
     this.matrix[x][y].changed = true;
   }

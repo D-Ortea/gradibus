@@ -1,3 +1,121 @@
-.render-area {
-  border: 1px solid black;
+.inputs { 
+  list-style: none;
+}
+
+.inputs, .labels {
+  display: inline-block;
+}
+
+.labels li {
+  font-size: 20px;
+}
+
+.marked {
+  background-color: #7f00ff;
+}
+
+.changed {
+  background-color: #5599ff;
+}
+
+.player-btn {
+  cursor: pointer;
+  outline: none;
+}
+
+.player-btn:hover {
+  background: #eee;
+  cursor: pointer;
+}
+
+.play-btn:active {
+  transform: translate(-2px, -2px);
+}
+
+.player {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
+
+.player * {
+  margin: 3px;
+}
+
+.center {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#pseudocode {
+  background: #333;
+  border: 3px solid #999;
+  list-style: none;
+  padding: 10px 15px 15px 5px;
+}
+
+.code-text {
+  font-family: monospace;
+  color: #F8B195;
+  white-space: pre;
+}
+
+.code-index {
+  font-family: monospace;
+  color: #999;
+  margin: auto 10px;
+}
+
+.code-highlight {
+  background: #355C7D;
+}
+
+td {
+  padding: 5px;
+}
+
+.input-form {
+  display: flex;
+  align-items: center;
+}
+
+.labels, .inputs, .buttons {
+  list-style: none;
+  padding: 6px;
+}
+
+.node {
+  fill: white;
+  stroke: black;
+  stroke-width: 2px;
+}
+
+.hidden-node {
+  fill: transparent;
+}
+
+.node-marked, .edge-marked {
+  stroke: orange;
+}
+
+.node-inserted {
+  stroke: greenyellow;
+}
+
+.node-deleted {
+  stroke: tomato;
+}
+
+.node-text {
+  text-anchor: center;
+  font-size: 15px;
+  font-family: monospace;
+  fill: black;
+}
+
+.link {
+  stroke: black;
+  fill: none;
+  stroke-width: 1.5;
+  stroke-opacity: 0.4;
 }

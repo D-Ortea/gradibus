@@ -11,15 +11,21 @@ import { ExecutionContextService } from '../execution-context.service';
 export class PlayerComponent implements OnInit, AfterViewInit {
   algorithmInput;
 
-  speed: number = 50;
+  speed: number;
   step: number;
-  maxStep: number = 100;
+  maxStep: number;
+  paused: boolean;
 
   constructor(
     private route: ActivatedRoute,
     private algoService: AlgorithmService,
     private context: ExecutionContextService
-  ) { }
+  ) {
+    this.speed = 50;
+    this.step = 0;
+    this.maxStep = 100;
+    this.paused = true;
+   }
 
   ngOnInit() {
     const algoName = this.route.snapshot.paramMap.get('algo');    
@@ -27,40 +33,39 @@ export class PlayerComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.context.getContext().subscribe(stepInfo => {
-      if (stepInfo.includes('Total')) {
-        this.maxStep = +stepInfo.split(' ')[1];
-      } else {
-        this.step = +stepInfo;
-      }
-    });
+    this.context.getSteps().subscribe(steps => this.step = steps);
+    this.context.getMaxSteps().subscribe(max => this.maxStep = max);
   }
 
   showSolution() {
     console.log('solution');
   }
 
-  play(stopPoint?: number) {
-    this.context.play(stopPoint).then(solution => {
-      if (solution) { console.log(`The solution was ${solution}`); }
+  play() {
+    this.paused = false;
+    this.context.setSpeed(this.speed);
+
+    this.context.play().then(solution => {
+      if (solution) {
+        console.log(`The solution was ${solution}`); 
+        this.paused = true;
+        this.context.reset();
+      }
     });
   }
 
-  playClick() {
-    this.context.setSpeed(this.speed);
-    this.play();
-  }
-
-  pauseClick() {
+  pause() {
     this.context.pause();
+    this.paused = true;
   }
 
   changeSpeed() {
-    if(!this.context.isPaused()) { this.context.setSpeed(this.speed); };
+    if(!this.paused) { this.context.setSpeed(this.speed); };
   }
 
   changeStep() {
-    this.play(this.step);
+    this.pause();
+    this.context.changeStep(this.step);
   }
 
   nextStep() {

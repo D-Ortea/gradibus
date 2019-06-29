@@ -15,6 +15,11 @@ export class HistoryService {
   }
 
   getStep(index: number) {
+    console.log(`Index required: ${index}/${this.algorithmSteps.length}`);
     return this.lastRenderer.getCopy(this.algorithmSteps[index]);
   }  
+
+  printHistory() {
+    this.algorithmSteps.forEach(step => console.log(step));
+  }
 }

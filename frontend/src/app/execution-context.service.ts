@@ -9,14 +9,16 @@ import { HistoryService } from './history.service';
 })
 export class ExecutionContextService {
   private solve: Function;
-  private _pauseAt: number;
   private algorithm: Algorithm;
-  private subject = new Subject<any>();
+  private stepSubject = new Subject<number>();
+  private maxStepSubject = new Subject<number>();
 
   stepsExecuted = 0;
   timeDelay = 0;
   totalSteps = 0;
   isInSync = true;
+  stopPoint: number;
+  oldSpeed: number;
 
   constructor(private history: HistoryService) { }
 
@@ -25,8 +27,8 @@ export class ExecutionContextService {
     algorithm.renderer.noRender = true;
     this.algorithm = algorithm;
     this.solve = this.makeSingle(algorithm, algorithm.solve);
-    this.setSpeed(0);
-    return this.play();
+    
+    return this.playWithoutRendering();
   }
 
   setSpeed(speed: number) {
@@ -37,10 +39,6 @@ export class ExecutionContextService {
     return this.timeDelay == Number.MAX_VALUE;
   }
 
-  pauseAt(step: number) {
-    this._pauseAt = step;
-  }  
-
   pause() {
     this.setSpeed(Number.MAX_VALUE);
   }
@@ -49,12 +47,19 @@ export class ExecutionContextService {
     return stopPoint < this.stepsExecuted;
   }
 
-  async delay() {
-    
+  async delay() {    
     this.stepsExecuted++;
-    this.sendContext(`${this.stepsExecuted}`);
+    if (!this.algorithm.renderer.noRender) { 
+      this.sendStep(); 
+    } else if (!this.stopPoint) {
+      this.history.addStep(this.algorithm.renderer);
+    }
 
-    if (this._pauseAt && this._pauseAt == this.stepsExecuted) { this.pause(); }
+    if (this.stopPoint && this.stopPoint === this.stepsExecuted) { 
+      this.stopPoint = undefined;
+      this.algorithm.renderer.noRender = false;
+      this.setSpeed(this.oldSpeed);
+    }
     
     const start = new Date().getTime();
 
@@ -67,35 +72,43 @@ export class ExecutionContextService {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  async play(stopPoint: number = undefined) {
-    if (stopPoint) { 
-      this.pauseAt(stopPoint);
-      this.setSpeed(0);
-      if (this.isPrevious(stopPoint)) { return this.rewind(stopPoint); }
-    }
-
-    if (!this.isInSync){ 
-      this.stepsExecuted = 0; 
-      this.isInSync = true;
-    }
-
+  async play() {
+    if (this.stopPoint) { return this.playUntilStopPoint(); }
     if (this.stepsExecuted > 0) { return; }
 
-    let solution = await this.solve();
-    if (solution) {
-      [this.stepsExecuted, this.totalSteps] = [0 ,this.stepsExecuted];
-      this.subject.next(`Total ${this.totalSteps}`);
-      this.algorithm.renderer.noRender = false;
-    }
+    return await this.solve();
+  }
 
+  async playWithoutRendering() {
+    this.setSpeed(0);
+
+    const solution = await this.solve();
+
+    this.totalSteps = this.stepsExecuted;
+    this.sendMaxStep();
+    this.algorithm.renderer.noRender = false;
+    this.reset();
+    
     return solution;
   }
 
-  private rewind(step: number) {
-    this.algorithm.renderer.setData(this.history.getStep(this.stepsExecuted));
+  async playUntilStopPoint() {
+    this.oldSpeed = this.timeDelay;
+    this.setSpeed(0);
+    this.algorithm.renderer.noRender = true;
+
+    return await this.solve();
+  }
+
+  reset() {
+    this.stepsExecuted = 0;
+  }
+
+  changeStep(step: number) {
+    this.algorithm.renderer.setData(this.history.getStep(step));
     this.algorithm.renderer.render();
-    this.stepsExecuted = step;
-    this.isInSync = false;
+    this.reset();
+    this.stopPoint = step;
   }
 
   makeSingle(context: Algorithm, generator: Function) {
@@ -116,11 +129,19 @@ export class ExecutionContextService {
     }
   }
 
-  sendContext(data: string) {
-    this.subject.next(data);
+  sendStep() {
+    this.stepSubject.next(this.stepsExecuted);
   }
 
-  getContext(): Observable<string> {
-    return this.subject.asObservable();
+  getSteps(): Observable<number> {
+    return this.stepSubject.asObservable();
+  }
+
+  sendMaxStep() {
+    this.maxStepSubject.next(this.totalSteps);
+  }
+
+  getMaxSteps() {
+    return this.maxStepSubject.asObservable();
   }
 }
