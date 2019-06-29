@@ -10,14 +10,6 @@
   font-size: 20px;
 }
 
-.marked {
-  background-color: #7f00ff;
-}
-
-.changed {
-  background-color: #5599ff;
-}
-
 .player-btn {
   cursor: pointer;
   outline: none;
