@@ -5,3 +5,7 @@
 :host ::ng-deep .changed {
   background-color: #5599ff;
 }
+
+:host ::ng-deep .log-rendering {
+  border: 1px solid black;
+}

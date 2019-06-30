@@ -15,7 +15,6 @@ export class ExecutionContextService {
 
   stepsExecuted = 0;
   timeDelay = 0;
-  totalSteps = 0;
   stopPoint: number;
   oldSpeed: number;
 
@@ -40,7 +39,6 @@ export class ExecutionContextService {
     this.history.clear();
     this.pause();
     this.stopPoint = undefined;
-    this.totalSteps = 0
     this.restart();
     this.sendStep();
   }
@@ -61,14 +59,15 @@ export class ExecutionContextService {
     return stopPoint < this.stepsExecuted;
   }
 
-  async delay() {    
-    this.stepsExecuted++;
+  async delay() {
     if (this.algorithm.rendererContainer.isRendering()) { 
       this.sendStep();
     } else if (!this.stopPoint) {
       this.history.addStep(this.algorithm.rendererContainer);
     }
 
+    this.stepsExecuted++;
+    
     if (this.stopPoint && this.stopPoint === this.stepsExecuted) { 
       this.stopPoint = undefined;
       this.noRender(false);
@@ -78,7 +77,6 @@ export class ExecutionContextService {
     const start = new Date().getTime();
 
     while(new Date().getTime() - start < this.timeDelay) {
-      console.log('sleeping just one ms...zzzzz');
       await this.sleep(1);
     }    
   }
@@ -91,6 +89,8 @@ export class ExecutionContextService {
     if (this.stopPoint) { return this.playUntilStopPoint(); }
     if (this.stepsExecuted > 0) { return; }
 
+    this.renderStep(0);
+
     return await this.solve();
   }
 
@@ -99,7 +99,6 @@ export class ExecutionContextService {
 
     const solution = await this.solve();
 
-    this.totalSteps = this.stepsExecuted;
     this.sendMaxStep();
     this.noRender(false);
     this.restart();
@@ -122,13 +121,17 @@ export class ExecutionContextService {
   }
 
   changeStep(step: number) {
-    this.algorithm.rendererContainer.setData(this.history.getStep(step));
-    this.algorithm.rendererContainer.renderAll();
+    this.renderStep(step);
     this.restart();
-    this.stopPoint = step;
+    this.stopPoint = step === this.history.getTotalSteps() ? undefined : step;
   }
 
-  makeSingle(context: Algorithm, generator: Function) {
+  private renderStep(step: number) {
+    this.algorithm.rendererContainer.setData(this.history.getStep(step));
+    this.algorithm.rendererContainer.renderAll();
+  }
+
+  private makeSingle(context: Algorithm, generator: Function) {
     let globalNonce;
     return async function(end: boolean = false) {
       const localNonce = globalNonce = new Object();
@@ -155,7 +158,7 @@ export class ExecutionContextService {
   }
 
   sendMaxStep() {
-    this.maxStepSubject.next(this.totalSteps);
+    this.maxStepSubject.next(this.history.getTotalSteps());
   }
 
   getMaxSteps() {

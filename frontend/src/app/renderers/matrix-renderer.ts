@@ -1,4 +1,4 @@
-import { Renderer } from '../renderer';
+import { Renderer } from './renderer';
 import * as d3 from "d3";
 
 export class MatrixRenderer implements Renderer {
@@ -12,25 +12,8 @@ export class MatrixRenderer implements Renderer {
     this.createTable();
   }
 
-  getData(): Cell[][] { return this.matrix; }
-
-  setData(newMatrix: Cell[][]) { this.matrix = newMatrix; }
-
-  getCopy(data?: Cell[][]): Cell[][] {
-    const matrix = data || this.matrix;
-    return matrix.map(row => row.map(cell => cell.copy()));
-  }
-
   initialize(matrix: any[]): void {
     this.matrix = matrix.map(row => row.map(cell => new Cell(cell, this)));
-  }
-
-  reset() {
-    this.matrix.forEach(row => row.forEach(cell => {
-      cell.value = 0;
-      cell.marked = false;
-      cell.changed = false;
-    }));
   }
 
   createTable() {
@@ -54,6 +37,23 @@ export class MatrixRenderer implements Renderer {
       );
 
     return true;
+  }
+
+  reset() {
+    this.matrix.forEach(row => row.forEach(cell => {
+      cell.value = 0;
+      cell.marked = false;
+      cell.changed = false;
+    }));
+  }
+
+  getData(): Cell[][] { return this.matrix; }
+
+  setData(newMatrix: Cell[][]) { this.matrix = newMatrix; }
+
+  getCopy(data?: Cell[][]): Cell[][] {
+    const matrix = data || this.matrix;
+    return matrix.map(row => row.map(cell => cell.copy()));
   }
 
   private parseClass(cell: Cell) {

@@ -1,8 +1,8 @@
 import { Algorithm } from './algorithm';
-import { MatrixRenderer } from 'src/app/render-components/matrix-renderer/matrix-renderer';
+import { MatrixRenderer } from 'src/app/renderers/matrix-renderer';
 import { ExecutionContextService } from 'src/app/execution-context.service';
-import { Renderer } from 'src/app/render-components/renderer';
-import { RendererContainer } from 'src/app/render-components/renderer-container';
+import { RendererContainer } from 'src/app/renderers/renderer-container';
+import { LoggerRenderer } from 'src/app/renderers/logger-renderer';
 
 const pseudocode = 
   `for j from 0 to W do:
@@ -41,15 +41,15 @@ export class KnapsackAlgorithm implements Algorithm {
       this.rendererContainer = new RendererContainer(
         ["problem", new MatrixRenderer()],
         ["values", new MatrixRenderer()],
-        ["weights", new MatrixRenderer()]
+        ["weights", new MatrixRenderer()],
+        ["logger", new LoggerRenderer()]
       );
     // Code.loadPseudocode(pseudocode);
   }
 
   *solve(): IterableIterator<any> {
     let DP: any[] = zeroes([this.values.length + 1, this.capacity + 1]);
-    const [problem, valuesR, weightsR] = [this.renderer('problem')
-      , this.renderer('values'), this.renderer('weights')];
+    const [problem, valuesR, weightsR, logger] = this.getRenderers();
 
     problem.initialize(DP);
     valuesR.initialize([this.values]);
@@ -104,8 +104,14 @@ export class KnapsackAlgorithm implements Algorithm {
       }
     }
 
-    console.log(printMatrix(DP));
-    return ` Best value we can achieve is ${DP[this.values.length][this.capacity]}`;
+    yield this.player.delay();
+    console.log('Just logged the matrix');
+    logger.log(printMatrix(DP));
+    yield this.player.delay();    
+    console.log('After logged the matrix');
+    logger.logLine(`Best value we can achieve is ${DP[this.values.length][this.capacity]}`);
+    yield this.player.delay();
+    return `Best value we can achieve is ${DP[this.values.length][this.capacity]}`;
   }
 
   findSolution(keep, k) {
@@ -120,8 +126,13 @@ export class KnapsackAlgorithm implements Algorithm {
     return result;
   }
 
-  private renderer(key) {
-    return (<MatrixRenderer>this.rendererContainer.find(key));
+  private getRenderers(): any[] {
+    return [
+      (<MatrixRenderer>this.rendererContainer.find('problem')),
+      (<MatrixRenderer>this.rendererContainer.find('values')),
+      (<MatrixRenderer>this.rendererContainer.find('weights')),
+      (<LoggerRenderer>this.rendererContainer.find('logger')),
+    ];
   }
  
   private async delayAndHighlight(index) {
