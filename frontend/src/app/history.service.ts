@@ -1,27 +1,30 @@
 import { Injectable } from '@angular/core';
-import { Renderer } from './render-components/renderer';
+import { RendererContainer } from './render-components/renderer-container';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HistoryService {
   private algorithmSteps: any[] = [];
-  private lastRenderer: Renderer;
+  private lastContainer: RendererContainer;
   constructor() { }
 
-  addStep(renderer: Renderer) {
-    if (renderer != this.lastRenderer) { this.lastRenderer = renderer; }
-    this.algorithmSteps.push(renderer.getCopy());
+  addStep(rendererContainer: RendererContainer) {
+    if (rendererContainer !== this.lastContainer) { 
+      this.lastContainer = rendererContainer; 
+    }
+    
+    this.algorithmSteps.push(rendererContainer.copyAll());
   }
 
-  getStep(index: number) {
+  getStep(index: number): any[] {
     console.log(`Index required: ${index}/${this.algorithmSteps.length}`);
-    return this.lastRenderer.getCopy(this.algorithmSteps[index]);
+    return this.lastContainer.copyAll(this.algorithmSteps[index]);
   }
 
   clear() {
     this.algorithmSteps = [];
-    this.lastRenderer = undefined;
+    this.lastContainer = undefined;
   }
 
   printHistory() {

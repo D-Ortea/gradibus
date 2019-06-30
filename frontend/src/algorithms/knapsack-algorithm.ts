@@ -2,6 +2,7 @@ import { Algorithm } from './algorithm';
 import { MatrixRenderer } from 'src/app/render-components/matrix-renderer/matrix-renderer';
 import { ExecutionContextService } from 'src/app/execution-context.service';
 import { Renderer } from 'src/app/render-components/renderer';
+import { RendererContainer } from 'src/app/render-components/renderer-container';
 
 const pseudocode = 
   `for j from 0 to W do:
@@ -30,57 +31,81 @@ const zeroes = dimensions => {
 
 export class KnapsackAlgorithm implements Algorithm {
   player: ExecutionContextService;
-  renderer: MatrixRenderer;
-  rendererContainer: Map<string, Renderer>;
+  rendererContainer: RendererContainer
 
   constructor(
     private values: number[], 
     private weights: number[],
     private capacity: number
     ) {
-      this.renderer = new MatrixRenderer();
+      this.rendererContainer = new RendererContainer(
+        ["problem", new MatrixRenderer()],
+        ["values", new MatrixRenderer()],
+        ["weights", new MatrixRenderer()]
+      );
     // Code.loadPseudocode(pseudocode);
   }
 
   *solve(): IterableIterator<any> {
-    let k: any[] = zeroes([this.values.length + 1, this.capacity + 1]);
-    this.renderer.initialize(k);
+    let DP: any[] = zeroes([this.values.length + 1, this.capacity + 1]);
+    const [problem, valuesR, weightsR] = [this.renderer('problem')
+      , this.renderer('values'), this.renderer('weights')];
+
+    problem.initialize(DP);
+    valuesR.initialize([this.values]);
+    weightsR.initialize([this.weights]);
 
     // yield this.delayAndHighlight(1)
-
-    let keep = [];
-    for (let i = 1; i <= this.values.length; i++) {
-      // yield this.delayAndHighlight(3)
-      keep[i] = [];
-      for (let j = +this.capacity; j >= 0; j--) {
-        // yield this.delayAndHighlight(4);
-        if (this.weights[i - 1] <= j 
-          && k[i - 1][j] < this.values[i - 1] 
-           + k[i - 1][j - this.weights[i - 1]]) {
-          // yield this.delayAndHighlight(7);
-          k[i][j] = this.values[i - 1] + k[i - 1][j - this.weights[i - 1]];
-          keep[i][j] = 1;
-          // yield this.delayAndHighlight(8);
-        } else {
-          // yield this.delayAndHighlight(5);
-          k[i][j] = k[i - 1][j];
-          keep[i][j] = 0;
-          // yield this.delayAndHighlight(6);
+    for (let i = 0; i <= this.values.length; i++) {
+      for (let j = 0; j <= this.capacity; j++) {
+        if (i === 0 || j === 0) {
+          /*
+          If we have no items or maximum weight we can take in collection is 0
+          then the total weight in our collection is 0
+          */
+          DP[i][0] = 0;
+          problem.alter(i, j, DP[i][j]);
+          yield this.player.delay();
+          problem.unAlter(i, j);
+        } else if (this.weights[i - 1] <= j) { // take the current item in our collection
+          valuesR.mark(0, i - 1);
+          yield this.player.delay();
+          weightsR.mark(0, i - 1);
+          yield this.player.delay();
+          problem.mark(i - 1, j);
+          yield this.player.delay();
+    
+          const A = this.values[i - 1] + DP[i - 1][j - this.weights[i - 1]];
+          const B = DP[i - 1][j];
+          /*
+          find the maximum of these two values
+          and take which gives us a greater weight
+           */
+          if (A > B) {
+            DP[i][j] = A;
+            problem.alter(i, j, DP[i][j]);
+            yield this.player.delay();
+          } else {
+            DP[i][j] = B;
+            problem.alter(i, j, DP[i][j]);
+            yield this.player.delay();
+          }
+    
+          problem.unMark(i - 1, j);
+          problem.unAlter(i, j);
+          weightsR.unMark(0, i - 1);
+          valuesR.unMark(0, i - 1);
+        } else { // leave the current item from our collection
+          DP[i][j] = DP[i - 1][j];
+          problem.alter(i, j, DP[i][j]);
+          yield this.player.delay();
+          problem.unAlter(i, j);
         }
-        
-        yield this.player.delay();
-        this.renderer.mark(i - 1, j);
-        yield this.player.delay();
-        this.renderer.alter(i, j, k[i][j]);
-        yield this.player.delay();
-        this.renderer.unMark(i - 1, j);
-        yield this.player.delay();
-        this.renderer.unAlter(i, j);
       }
     }
 
-    console.log(printMatrix(k));
-    return this.findSolution(keep, k);
+    console.log(printMatrix(DP));
+    return ` Best value we can achieve is ${DP[this.values.length][this.capacity]}`;
   }
 
   findSolution(keep, k) {
@@ -95,7 +120,11 @@ export class KnapsackAlgorithm implements Algorithm {
     return result;
   }
 
-  async delayAndHighlight(index) {
+  private renderer(key) {
+    return (<MatrixRenderer>this.rendererContainer.find(key));
+  }
+ 
+  private async delayAndHighlight(index) {
     // Code.highlightLine(index);
     // await this.player.delay();
     // Code.stopHighlightingLine(index);
@@ -105,6 +134,45 @@ export class KnapsackAlgorithm implements Algorithm {
 }
 
 
+// let keep = [];
+// for (let i = 1; i <= this.values.length; i++) {
+//   // yield this.delayAndHighlight(3)
+//   keep[i] = [];
+//   for (let j = +this.capacity; j >= 0; j--) {
+//     // yield this.delayAndHighlight(4);
+//     if (this.weights[i - 1] <= j 
+//       && k[i - 1][j] < this.values[i - 1] 
+//        + k[i - 1][j - this.weights[i - 1]]) {
+//       // yield this.delayAndHighlight(7);
+//       valuesR.mark(0, i - 1);
+//       yield this.player.delay();
+//       weightsR.mark(0, i - 1);
+//       yield this.player.delay();
+//       problem.mark(i - 1, j);
+      
+//       k[i][j] = this.values[i - 1] + k[i - 1][j - this.weights[i - 1]];
+//       keep[i][j] = 1;
+//       // yield this.delayAndHighlight(8);
+//     } else {
+//       // yield this.delayAndHighlight(5);
+//       k[i][j] = k[i - 1][j];
+//       keep[i][j] = 0;
+//       // yield this.delayAndHighlight(6);
+//     }
+    
+//     yield this.player.delay();
+//     problem.mark(i - 1, j);
+//     yield this.player.delay();
+//     problem.alter(i, j, k[i][j]);
+//     yield this.player.delay();
+//     problem.unMark(i - 1, j);
+//     yield this.player.delay();
+//     problem.unAlter(i, j);
+//   }
+// }
+
+// console.log(printMatrix(k));
+// return this.findSolution(keep, k);
 
 // Problems with solutions
 

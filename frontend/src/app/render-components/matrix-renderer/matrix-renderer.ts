@@ -8,6 +8,7 @@ export class MatrixRenderer implements Renderer {
 
   constructor() { 
     this.noRender = true;
+    this.matrix = [];
     this.createTable();
   }
 

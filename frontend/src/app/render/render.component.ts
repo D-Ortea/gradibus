@@ -15,7 +15,7 @@ export class RenderComponent implements OnInit {
   ngOnInit() {
     this.renderService.getAlgorithm().subscribe(algorithm => {
       this.renderArea.nativeElement.innerHTML = '';
-      this.renderArea.nativeElement.append(algorithm.renderer.renderElement);
+      algorithm.rendererContainer.appendInto(this.renderArea.nativeElement);
     });
   }
 

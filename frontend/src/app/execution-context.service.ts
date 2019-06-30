@@ -23,12 +23,16 @@ export class ExecutionContextService {
 
   setUpContext(algorithm: Algorithm, options: Options) {
     algorithm.player = this;
-    algorithm.renderer.noRender = true;
     this.algorithm = algorithm;
+    this.noRender()
     this.reset();
     this.solve = this.makeSingle(algorithm, algorithm.solve);
     
     return this.calculateStepsAndShow();
+  }
+
+  noRender(value = true) {
+    this.algorithm.rendererContainer.noRender(value);
   }
 
   reset() {
@@ -59,21 +63,22 @@ export class ExecutionContextService {
 
   async delay() {    
     this.stepsExecuted++;
-    if (!this.algorithm.renderer.noRender) { 
-      this.sendStep(); 
+    if (this.algorithm.rendererContainer.isRendering()) { 
+      this.sendStep();
     } else if (!this.stopPoint) {
-      this.history.addStep(this.algorithm.renderer);
+      this.history.addStep(this.algorithm.rendererContainer);
     }
 
     if (this.stopPoint && this.stopPoint === this.stepsExecuted) { 
       this.stopPoint = undefined;
-      this.algorithm.renderer.noRender = false;
+      this.noRender(false);
       this.setSpeed(this.oldSpeed);
     }
     
     const start = new Date().getTime();
 
     while(new Date().getTime() - start < this.timeDelay) {
+      console.log('sleeping just one ms...zzzzz');
       await this.sleep(1);
     }    
   }
@@ -96,18 +101,18 @@ export class ExecutionContextService {
 
     this.totalSteps = this.stepsExecuted;
     this.sendMaxStep();
-    this.algorithm.renderer.noRender = false;
+    this.noRender(false);
     this.restart();
     
-    this.algorithm.renderer.reset();
-    this.algorithm.renderer.render();
+    this.algorithm.rendererContainer.resetAll();
+    this.algorithm.rendererContainer.renderAll();
     return solution;
   }
 
   async playUntilStopPoint() {
     this.oldSpeed = this.timeDelay;
     this.setSpeed(0);
-    this.algorithm.renderer.noRender = true;
+    this.noRender();
 
     return await this.solve();
   }
@@ -117,15 +122,15 @@ export class ExecutionContextService {
   }
 
   changeStep(step: number) {
-    this.algorithm.renderer.setData(this.history.getStep(step));
-    this.algorithm.renderer.render();
+    this.algorithm.rendererContainer.setData(this.history.getStep(step));
+    this.algorithm.rendererContainer.renderAll();
     this.restart();
     this.stopPoint = step;
   }
 
   makeSingle(context: Algorithm, generator: Function) {
     let globalNonce;
-    return async function(end?: boolean) {
+    return async function(end: boolean = false) {
       const localNonce = globalNonce = new Object();
       if (end) { return; }
       const iter = generator.call(context);
