@@ -1,26 +1,14 @@
-import { Component, OnInit } from '@angular/core';
 import { Renderer } from '../renderer';
-import { RenderService } from 'src/app/render.service';
 import * as d3 from "d3";
 
-@Component({
-  selector: 'app-matrix-renderer',
-  templateUrl: './matrix-renderer.component.html',
-  styleUrls: ['./matrix-renderer.component.css']
-})
-export class MatrixRendererComponent implements OnInit, Renderer {
+export class MatrixRenderer implements Renderer {
   noRender: boolean;
-  generator: IterableIterator<any>;
+  renderElement: HTMLTableElement;
   matrix: Cell[][];
 
-  constructor(
-    private renderService: RenderService
-    ) {
-      this.noRender = true;
-     }
-
-  ngOnInit() {
-    this.renderService.sendRenderer(this);
+  constructor() { 
+    this.noRender = true;
+    this.createTable();
   }
 
   getData(): Cell[][] { return this.matrix; }
@@ -34,21 +22,26 @@ export class MatrixRendererComponent implements OnInit, Renderer {
 
   initialize(matrix: any[]): void {
     this.matrix = matrix.map(row => row.map(cell => new Cell(cell, this)));
-    this.render();
+  }
+
+  reset() {
+    this.matrix.forEach(row => row.forEach(cell => {
+      cell.value = 0;
+      cell.marked = false;
+      cell.changed = false;
+    }));
+  }
+
+  createTable() {
+    this.renderElement = document.createElement('table');
+    this.renderElement.classList.add('.table');
+    this.renderElement.appendChild(document.createElement('tbody'));
   }
 
   render() {
     if (this.noRender) { return; }
-    if (!this.generator) { this.generator = this._render(); }
-
-    return this.generator.next();
-  }
-
-  private *_render() {
-    const table = d3.select('#render-table');
-
-    while(true) {
-      table.selectAll('tr').data(this.matrix).join('tr')
+    
+    d3.select(this.renderElement).selectAll('tr').data(this.matrix).join('tr')
       .selectAll('td').data(d => d).join(
         enter => enter.append('td').text(cell => cell.value),
         update => {
@@ -58,21 +51,12 @@ export class MatrixRendererComponent implements OnInit, Renderer {
           update.text(cell => cell.value);
         }
       );
-        
-      yield true;
-    }
+
+    return true;
   }
 
   private parseClass(cell: Cell) {
     return `${cell.changed ? 'changed' : ''} ${cell.marked ? 'marked' : ''}`.trim();
-  }
-
-  reset() {
-    this.matrix.forEach(row => row.forEach(elem => {
-      elem.value = 0;
-      elem.changed = false;
-      elem.marked = false;
-    }));
   }
 
   alter(x: number, y: number, newValue: any) {
@@ -113,7 +97,7 @@ export class MatrixRendererComponent implements OnInit, Renderer {
 class Cell {
   constructor(
     private _value: any,
-    private _renderer: MatrixRendererComponent,
+    private _renderer: MatrixRenderer,
     private _marked: boolean = false,
     private _changed: boolean = false
   ) { }

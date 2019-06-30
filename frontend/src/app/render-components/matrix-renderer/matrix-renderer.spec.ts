@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TreeRendererComponent } from './tree-renderer.component';
+import { MatrixRenderer } from './matrix-renderer';
 
-describe('TreeRendererComponent', () => {
-  let component: TreeRendererComponent;
-  let fixture: ComponentFixture<TreeRendererComponent>;
+describe('MatrixRendererComponent', () => {
+  let component: MatrixRenderer;
+  let fixture: ComponentFixture<MatrixRenderer>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TreeRendererComponent ]
+      declarations: [ MatrixRenderer ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TreeRendererComponent);
+    fixture = TestBed.createComponent(MatrixRenderer);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -13,7 +13,6 @@ import { KnapsackInputComponent } from './input-components/knapsack-input/knapsa
 import { InputDirective } from './input.directive';
 import { BinarySearchTreeComponent } from './binary-search-tree/binary-search-tree.component';
 import { RenderComponent } from './render/render.component';
-import { MatrixRendererComponent } from './render-components/matrix-renderer/matrix-renderer.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +25,6 @@ import { MatrixRendererComponent } from './render-components/matrix-renderer/mat
     InputDirective,
     BinarySearchTreeComponent,
     RenderComponent,
-    MatrixRendererComponent,
     
   ],
   imports: [
@@ -37,8 +35,6 @@ import { MatrixRendererComponent } from './render-components/matrix-renderer/mat
   ],
   entryComponents: [ 
      KnapsackInputComponent,
-     BinarySearchTreeComponent,
-     MatrixRendererComponent,
       ],
   providers: [],
   bootstrap: [AppComponent]

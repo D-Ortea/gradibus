@@ -16,7 +16,6 @@ export class ExecutionContextService {
   stepsExecuted = 0;
   timeDelay = 0;
   totalSteps = 0;
-  isInSync = true;
   stopPoint: number;
   oldSpeed: number;
 
@@ -26,9 +25,20 @@ export class ExecutionContextService {
     algorithm.player = this;
     algorithm.renderer.noRender = true;
     this.algorithm = algorithm;
+    this.reset();
     this.solve = this.makeSingle(algorithm, algorithm.solve);
     
-    return this.playWithoutRendering();
+    return this.calculateStepsAndShow();
+  }
+
+  reset() {
+    if (this.solve) { this.solve(true); }
+    this.history.clear();
+    this.pause();
+    this.stopPoint = undefined;
+    this.totalSteps = 0
+    this.restart();
+    this.sendStep();
   }
 
   setSpeed(speed: number) {
@@ -79,7 +89,7 @@ export class ExecutionContextService {
     return await this.solve();
   }
 
-  async playWithoutRendering() {
+  async calculateStepsAndShow() {
     this.setSpeed(0);
 
     const solution = await this.solve();
@@ -87,8 +97,10 @@ export class ExecutionContextService {
     this.totalSteps = this.stepsExecuted;
     this.sendMaxStep();
     this.algorithm.renderer.noRender = false;
-    this.reset();
+    this.restart();
     
+    this.algorithm.renderer.reset();
+    this.algorithm.renderer.render();
     return solution;
   }
 
@@ -100,23 +112,23 @@ export class ExecutionContextService {
     return await this.solve();
   }
 
-  reset() {
+  restart() {
     this.stepsExecuted = 0;
   }
 
   changeStep(step: number) {
     this.algorithm.renderer.setData(this.history.getStep(step));
     this.algorithm.renderer.render();
-    this.reset();
+    this.restart();
     this.stopPoint = step;
   }
 
   makeSingle(context: Algorithm, generator: Function) {
     let globalNonce;
-    return async function(...args) {
+    return async function(end?: boolean) {
       const localNonce = globalNonce = new Object();
-
-      const iter = generator.call(context,...args);
+      if (end) { return; }
+      const iter = generator.call(context);
       let resumeValue;
       for (;;) {
         const n = iter.next(resumeValue);

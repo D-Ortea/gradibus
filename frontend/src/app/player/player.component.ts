@@ -33,7 +33,10 @@ export class PlayerComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.context.getSteps().subscribe(steps => this.step = steps);
+    this.context.getSteps().subscribe(steps => {
+      this.step = steps;
+      this.paused = this.step === 0;
+    });
     this.context.getMaxSteps().subscribe(max => this.maxStep = max);
   }
 
@@ -49,7 +52,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
       if (solution) {
         console.log(`The solution was ${solution}`); 
         this.paused = true;
-        this.context.reset();
+        this.context.restart();
       }
     });
   }

@@ -12,17 +12,18 @@ export class KnapsackInputComponent extends InputComponent implements OnInit {
   weights: string = '5,4,6,3';
   capacity: number = 10;
 
-  ngOnInit() {
+  ngOnInit() { this.loadAlgoritm(); }
+
+  solve() {
+    this.loadAlgoritm();
+  }
+
+  loadAlgoritm() {
     const parse = (str: string) => str.split(',').map(num => +num);
     const algo = new KnapsackAlgorithm(parse(this.values), parse(this.weights)
       , this.capacity);    
     
-    super.loadAlgorithmContext(algo,
-      { autoplay: true, skip: true, delete: true });
-  }
-
-  solve() {
-    this.executionContext.play();
+    super.loadAlgorithmContext(algo, { autoplay: true, skip: true, delete: true });
   }
   
 }

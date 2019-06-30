@@ -1,7 +1,0 @@
-:host ::ng-deep .marked {
-  background-color: #7f00ff;
-}
-
-:host ::ng-deep .changed {
-  background-color: #5599ff;
-}
