@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {AlgorithmService } from '../algorithm.service';
+import { AlgorithmService } from '../algorithm.service';
 import { ExecutionContextService } from '../execution-context.service';
 
 @Component({
@@ -28,7 +28,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
    }
 
   ngOnInit() {
-    const algoName = this.route.snapshot.paramMap.get('algo');    
+    const algoName = this.route.snapshot.paramMap.get('algo');
     this.algorithmInput = this.algoService.getAlgorithm(algoName).component;
   }
 
@@ -50,7 +50,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
 
     this.context.play().then(solution => {
       if (solution) {
-        console.log(`The solution was ${solution}`); 
+        console.log(`The solution was ${solution}`);
         this.paused = true;
         this.context.restart();
       }
@@ -63,7 +63,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
   }
 
   changeSpeed() {
-    if(!this.paused) { this.context.setSpeed(this.speed); };
+    if (!this.paused) { this.context.setSpeed(this.speed); }
   }
 
   changeStep() {
@@ -77,7 +77,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
   }
 
   previousStep() {
-    if (this.step != 0) { this.step--; }
+    if (this.step !== 0) { this.step--; }
     this.changeStep();
   }
 }

@@ -7,16 +7,16 @@ import { Renderer } from 'src/app/renderers/renderer';
   providedIn: 'root'
 })
 export class RenderService {
-  
+
   algorithmSubject = new Subject<any>();
   rendererSubject = new Subject<any>();
-  
+
   constructor() { }
-  
+
   sendAlgorithm(algorithm: Algorithm) {
     this.algorithmSubject.next(algorithm);
   }
-  
+
   getAlgorithm(): Observable<Algorithm> {
     return this.algorithmSubject.asObservable();
   }

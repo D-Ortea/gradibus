@@ -10,10 +10,10 @@ export class HistoryService {
   constructor() { }
 
   addStep(rendererContainer: RendererContainer) {
-    if (rendererContainer !== this.lastContainer) { 
-      this.lastContainer = rendererContainer; 
+    if (rendererContainer !== this.lastContainer) {
+      this.lastContainer = rendererContainer;
     }
-    console.log(rendererContainer.copyAll());
+    console.log(rendererContainer.copyAll()[0]);
     this.algorithmSteps.push(rendererContainer.copyAll());
   }
 

@@ -1,0 +1,14 @@
+.inputs { 
+  list-style: none;
+}
+
+.inputs, .labels, .buttons {
+  display: inline-block;
+  list-style: none;
+  padding: 6px;
+}
+
+.input-form {
+  display: flex;
+  align-items: center;
+}

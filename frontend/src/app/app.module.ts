@@ -11,8 +11,8 @@ import { PlayerComponent } from './player/player.component';
 import { InputComponent } from './input/input.component';
 import { KnapsackInputComponent } from './input-components/knapsack-input/knapsack-input.component';
 import { InputDirective } from './input.directive';
-import { BinarySearchTreeComponent } from './binary-search-tree/binary-search-tree.component';
 import { RenderComponent } from './render/render.component';
+import { BinarySearchTreeInputComponent } from './input-components/binary-search-tree-input/binary-search-tree-input.component';
 
 @NgModule({
   declarations: [
@@ -23,9 +23,9 @@ import { RenderComponent } from './render/render.component';
     InputComponent,
     KnapsackInputComponent,
     InputDirective,
-    BinarySearchTreeComponent,
     RenderComponent,
-    
+    BinarySearchTreeInputComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -33,8 +33,9 @@ import { RenderComponent } from './render/render.component';
     HttpClientModule,
     AppRoutingModule
   ],
-  entryComponents: [ 
+  entryComponents: [
      KnapsackInputComponent,
+     BinarySearchTreeInputComponent,
       ],
   providers: [],
   bootstrap: [AppComponent]

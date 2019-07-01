@@ -8,7 +8,7 @@ import { HistoryService } from './history.service';
   providedIn: 'root'
 })
 export class ExecutionContextService {
-  private solve: Function;
+  private solve: (end?: boolean) => any;
   private algorithm: Algorithm;
   private stepSubject = new Subject<number>();
   private maxStepSubject = new Subject<number>();
@@ -23,10 +23,10 @@ export class ExecutionContextService {
   setUpContext(algorithm: Algorithm, options: Options) {
     algorithm.player = this;
     this.algorithm = algorithm;
-    this.noRender()
+    this.noRender();
     this.reset();
     this.solve = this.makeSingle(algorithm, algorithm.solve);
-    
+
     return this.calculateStepsAndShow();
   }
 
@@ -48,7 +48,7 @@ export class ExecutionContextService {
   }
 
   isPaused() {
-    return this.timeDelay == Number.MAX_VALUE;
+    return this.timeDelay === Number.MAX_VALUE;
   }
 
   pause() {
@@ -60,25 +60,25 @@ export class ExecutionContextService {
   }
 
   async delay() {
-    if (this.algorithm.rendererContainer.isRendering()) { 
+    if (this.algorithm.rendererContainer.isRendering()) {
       this.sendStep();
     } else if (!this.stopPoint) {
       this.history.addStep(this.algorithm.rendererContainer);
     }
 
     this.stepsExecuted++;
-    
-    if (this.stopPoint && this.stopPoint === this.stepsExecuted) { 
+
+    if (this.stopPoint && this.stopPoint === this.stepsExecuted) {
       this.stopPoint = undefined;
       this.noRender(false);
       this.setSpeed(this.oldSpeed);
     }
-    
+
     const start = new Date().getTime();
 
-    while(new Date().getTime() - start < this.timeDelay) {
+    while (new Date().getTime() - start < this.timeDelay) {
       await this.sleep(1);
-    }    
+    }
   }
 
   private sleep(ms: number) {
@@ -102,7 +102,7 @@ export class ExecutionContextService {
     this.sendMaxStep();
     this.noRender(false);
     this.restart();
-    
+
     this.algorithm.rendererContainer.resetAll();
     this.algorithm.rendererContainer.renderAll();
     return solution;
@@ -131,9 +131,9 @@ export class ExecutionContextService {
     this.algorithm.rendererContainer.renderAll();
   }
 
-  private makeSingle(context: Algorithm, generator: Function) {
+  private makeSingle(context: Algorithm, generator: () => any) {
     let globalNonce;
-    return async function(end: boolean = false) {
+    return async (end: boolean = false) => {
       const localNonce = globalNonce = new Object();
       if (end) { return; }
       const iter = generator.call(context);
@@ -146,7 +146,7 @@ export class ExecutionContextService {
         resumeValue = await n.value;
         if (localNonce !== globalNonce) { return; }
       }
-    }
+    };
   }
 
   sendStep() {

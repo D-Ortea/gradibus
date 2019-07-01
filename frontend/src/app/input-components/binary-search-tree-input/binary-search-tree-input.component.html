@@ -1,0 +1,12 @@
+<div class='input-form'>
+  <ul class='inputs'>
+    <li><input type="text" name="create" id="create" [(ngModel)]="createValues"></li>
+    <li><input type="text" name="search" id="search" [(ngModel)]="searchValue"></li>
+    <li><input type="text" name="insert" id="insert" [(ngModel)]="insertValues"></li>
+  </ul>
+  <ul class="buttons">
+    <li><button type="button" (click)="create()" class=input-button>create</button></li>
+    <li><button type="button" (click)="search()" class=input-button>search</button></li>
+    <li><button type="button" (click)="insert()" class=input-button>insert</button></li>
+  </ul>
+</div>

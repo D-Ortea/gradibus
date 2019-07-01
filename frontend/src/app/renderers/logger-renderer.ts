@@ -1,8 +1,9 @@
 import { Renderer } from './renderer';
 
-export class LoggerRenderer implements Renderer{
+export class LoggerRenderer implements Renderer {
   noRender: boolean;
   renderElement: HTMLDivElement;
+  // tslint:disable-next-line:variable-name
   _text: string;
 
   get text() {
@@ -13,7 +14,7 @@ export class LoggerRenderer implements Renderer{
     this._text = newText;
     this.render();
   }
- 
+
   constructor() {
     this.noRender = true;
     this.renderElement = document.createElement('div');
@@ -29,7 +30,7 @@ export class LoggerRenderer implements Renderer{
     if (this.noRender) { return; }
     this.renderElement.innerHTML = this.text;
   }
-  
+
   reset(): void {
     this.text = '';
   }
@@ -43,7 +44,7 @@ export class LoggerRenderer implements Renderer{
   }
 
   getCopy(data?: string): string {
-    const copy = data || this.text || " ";
+    const copy = data || this.text || ' ';
     return copy;
   }
 

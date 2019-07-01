@@ -16,24 +16,24 @@ export class RendererContainer {
   }
 
   copyAll(data?: any[]): any[] {
-    const copy: any[] = []
+    const copy: any[] = [];
     for (let i = 0; i < this.renderers.length; i++) {
       const [key, renderer] = this.renderers[i];
-      copy.push(renderer.getCopy(data && data[i]));      
+      copy.push(renderer.getCopy(data && data[i]));
     }
     return copy;
   }
 
   noRender(value = true) {
-    for (let [_, renderer] of this.renderers) { renderer.noRender = value; }
+    for (const [_, renderer] of this.renderers) { renderer.noRender = value; }
   }
 
   renderAll() {
-    for (let [_, renderer] of this.renderers) { renderer.render(); }
+    for (const [_, renderer] of this.renderers) { renderer.render(); }
   }
 
   resetAll() {
-    for (let [_, renderer] of this.renderers) { renderer.reset(); }
+    for (const [_, renderer] of this.renderers) { renderer.reset(); }
   }
 
   setData(data: any[]) {
@@ -44,7 +44,7 @@ export class RendererContainer {
   }
 
   appendInto(elem: HTMLElement) {
-    for (let [_, renderer] of this.renderers) { elem.append(renderer.renderElement); }
+    for (const [_, renderer] of this.renderers) { elem.append(renderer.renderElement); }
   }
 
   isRendering(): boolean {
@@ -58,8 +58,7 @@ export class RendererContainer {
   *iterator() {
     let counter = 0;
     while (counter < this.noRender.length) {
-      yield this.renderers[counter];
+      yield this.renderers[counter++];
     }
   }
-
 }
