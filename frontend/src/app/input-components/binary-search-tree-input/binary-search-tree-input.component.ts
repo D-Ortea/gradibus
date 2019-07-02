@@ -22,7 +22,8 @@ export class BinarySearchTreeInputComponent extends InputComponent implements On
 
   loadAlgorithm() {
     this.bst = new BinarySearchTreeAlgorithm();
-    this.create();
+    this.sendFunction(() => this.bst.create(this.parse(this.createValues))
+      , { autoplay: false, skip: true, delete: true });
   }
 
   create() {

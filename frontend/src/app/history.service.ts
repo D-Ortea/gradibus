@@ -1,25 +1,25 @@
 import { Injectable } from '@angular/core';
-import { RendererContainer } from './renderers/renderer-container';
+import { ModelContainer } from './renderers/renderer-container';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HistoryService {
   private algorithmSteps: any[] = [];
-  private lastContainer: RendererContainer;
+  private lastContainer: ModelContainer;
   constructor() { }
 
-  addStep(rendererContainer: RendererContainer) {
+  addStep(rendererContainer: ModelContainer) {
     if (rendererContainer !== this.lastContainer) {
       this.lastContainer = rendererContainer;
     }
-    console.log(rendererContainer.copyAll()[0]);
+    // console.log(rendererContainer.copyAll()[0]);
     this.algorithmSteps.push(rendererContainer.copyAll());
   }
 
   getStep(index: number): any[] {
     console.log(`Index required: ${index}/${this.algorithmSteps.length}`);
-    console.log(this.algorithmSteps[index]);
+    // console.log(this.algorithmSteps[index]);
     return this.lastContainer.copyAll(this.algorithmSteps[index]);
   }
 

@@ -1,9 +1,9 @@
 import { ExecutionContextService } from 'src/app/execution-context.service';
-import { RendererContainer } from 'src/app/renderers/renderer-container';
+import { ModelContainer } from 'src/app/renderers/renderer-container';
 
 export interface Algorithm {
-  rendererContainer: RendererContainer;
+  modelContainer: ModelContainer;
   player: ExecutionContextService;
 
-  solve(): IterableIterator<string>;
+  solve(): any;
 }

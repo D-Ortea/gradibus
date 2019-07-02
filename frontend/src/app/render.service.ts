@@ -10,6 +10,7 @@ export class RenderService {
 
   algorithmSubject = new Subject<any>();
   rendererSubject = new Subject<any>();
+  playerSubject = new Subject<any>();
 
   constructor() { }
 
@@ -27,5 +28,13 @@ export class RenderService {
 
   getRenderer(): Observable<Renderer> {
     return this.rendererSubject.asObservable();
+  }
+
+  subscribePlayerReady() {
+    return this.playerSubject.asObservable();
+  }
+
+  notifyPlayerReady(ready: boolean) {
+    this.playerSubject.next(ready);
   }
 }

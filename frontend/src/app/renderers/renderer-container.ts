@@ -1,54 +1,46 @@
-import { Renderer } from './renderer';
+import { Model } from '../models/model';
 
-export class RendererContainer {
-  renderers: [string, Renderer][];
+export class ModelContainer {
+  models: [string, Model][];
 
-  constructor(...tuples: [string, Renderer][]) {
-    this.renderers = tuples;
+  constructor(...tuples: [string, Model][]) {
+    this.models = tuples;
   }
 
-  find(key: string): Renderer {
-    return this.renderers.find(([k, v]) => k === key)[1];
+  find(key: string): Model {
+    return this.models.find(([k, v]) => k === key)[1];
   }
 
-  insert(tuple: [string, Renderer]) {
-    this.renderers.push(tuple);
+  insert(tuple: [string, Model]) {
+    this.models.push(tuple);
   }
 
   copyAll(data?: any[]): any[] {
     const copy: any[] = [];
-    for (let i = 0; i < this.renderers.length; i++) {
-      const [key, renderer] = this.renderers[i];
-      copy.push(renderer.getCopy(data && data[i]));
+    for (let i = 0; i < this.models.length; i++) {
+      const [key, model] = this.models[i];
+      copy.push(model.getCopy(data && data[i]));
     }
     return copy;
   }
 
-  noRender(value = true) {
-    for (const [_, renderer] of this.renderers) { renderer.noRender = value; }
-  }
-
   renderAll() {
-    for (const [_, renderer] of this.renderers) { renderer.render(); }
+    for (const [_, model] of this.models) { model.renderer.render(model.getData()); }
   }
 
   resetAll() {
-    for (const [_, renderer] of this.renderers) { renderer.reset(); }
+    for (const [_, model] of this.models) { model.reset(); }
   }
 
   setData(data: any[]) {
     for (let i = 0; i <  data.length; i++) {
-      if (!this.renderers[i]) { continue; }
-      this.renderers[i][1].setData(data[i]);
+      if (!this.models[i]) { continue; }
+      this.models[i][1].setData(data[i]);
     }
   }
 
   appendInto(elem: HTMLElement) {
-    for (const [_, renderer] of this.renderers) { elem.append(renderer.renderElement); }
-  }
-
-  isRendering(): boolean {
-    return !this.renderers[0][1].noRender;
+    for (const [_, model] of this.models) { elem.append(model.renderer.renderElement); }
   }
 
   public [Symbol.iterator]() {
@@ -57,8 +49,8 @@ export class RendererContainer {
 
   *iterator() {
     let counter = 0;
-    while (counter < this.noRender.length) {
-      yield this.renderers[counter++];
+    while (counter < this.models.length) {
+      yield this.models[counter++];
     }
   }
 }

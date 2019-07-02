@@ -8,24 +8,24 @@ import { InputComponent } from 'src/app/input/input.component';
   styleUrls: ['./knapsack-input.component.css']
 })
 export class KnapsackInputComponent extends InputComponent implements OnInit {
-  values: string = '10,40,30,50';
-  weights: string = '5,4,6,3';
-  capacity: number = 10;
+  values = '10,40,30,50';
+  weights = '5,4,6,3';
+  capacity = 10;
 
-  ngOnInit() { this.loadAlgoritm(); }
+  ngOnInit() { this.loadAlgoritm( { autoplay: false, skip: true, delete: true }); }
 
   solve() {
     this.loadAlgoritm();
   }
 
-  loadAlgoritm() {
+  loadAlgoritm(options = { autoplay: true, skip: false, delete: true }) {
     const parse = (str: string) => str.split(',').map(num => +num);
     const algo = new KnapsackAlgorithm(parse(this.values), parse(this.weights)
-      , this.capacity);    
-    
-    super.loadAlgorithmContext(algo, { autoplay: true, skip: true, delete: true });
+      , this.capacity);
+
+    super.loadAlgorithmContext(algo, options);
   }
-  
+
 }
 
 ///////// PROBLEM 1 /////////////////

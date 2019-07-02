@@ -1,43 +1,50 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlgorithmService } from '../algorithm.service';
 import { ExecutionContextService } from '../execution-context.service';
+import { RenderService } from '../render.service';
 
 @Component({
   selector: 'app-player',
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.css']
 })
-export class PlayerComponent implements OnInit, AfterViewInit {
+export class PlayerComponent implements OnInit {
   algorithmInput;
 
   speed: number;
   step: number;
   maxStep: number;
   paused: boolean;
+  temp: [number, number];
 
   constructor(
     private route: ActivatedRoute,
     private algoService: AlgorithmService,
-    private context: ExecutionContextService
+    private context: ExecutionContextService,
+    private renderService: RenderService
   ) {
-    this.speed = 50;
+    this.speed = 1000;
     this.step = 0;
     this.maxStep = 100;
     this.paused = true;
-   }
+  }
 
   ngOnInit() {
     const algoName = this.route.snapshot.paramMap.get('algo');
     this.algorithmInput = this.algoService.getAlgorithm(algoName).component;
+    this.subscribeToSteps();
+    console.log('Player Sent notification!!!');
+    this.renderService.notifyPlayerReady(true);
   }
 
-  ngAfterViewInit() {
-    this.context.getSteps().subscribe(steps => {
+  subscribeToSteps() {
+    this.context.subscribeSteps().subscribe(steps => {
+      console.log(`Step notified: ${steps}`);
       this.step = steps;
-      this.paused = this.step === 0;
+      this.paused = this.step === 0 || this.step === this.maxStep;
     });
-    this.context.getMaxSteps().subscribe(max => this.maxStep = max);
+    this.context.subscribeTotalSteps().subscribe(max => this.maxStep = max);
   }
 
   showSolution() {
@@ -52,7 +59,6 @@ export class PlayerComponent implements OnInit, AfterViewInit {
       if (solution) {
         console.log(`The solution was ${solution}`);
         this.paused = true;
-        this.context.restart();
       }
     });
   }

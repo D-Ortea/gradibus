@@ -89,18 +89,6 @@ export class TreeRenderer implements Renderer {
       return;
     }
   }
-  reset(): void {
-    throw new Error('Method not implemented.');
-  }
-  getData() {
-    throw new Error('Method not implemented.');
-  }
-  setData(data: any): void {
-    throw new Error('Method not implemented.');
-  }
-  getCopy(data?: any) {
-    throw new Error('Method not implemented.');
-  }
 
   createTree(root) {
     const treeBuilder = node => {

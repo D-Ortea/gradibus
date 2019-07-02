@@ -1,8 +1,8 @@
 import { Algorithm } from './algorithm';
-import { MatrixRenderer } from 'src/app/renderers/matrix-renderer';
 import { ExecutionContextService } from 'src/app/execution-context.service';
-import { RendererContainer } from 'src/app/renderers/renderer-container';
-import { LoggerRenderer } from 'src/app/renderers/logger-renderer';
+import { ModelContainer } from 'src/app/renderers/renderer-container';
+import { MatrixModel } from 'src/app/models/matrix-model';
+import { LoggerModel } from 'src/app/models/logger-model';
 
 const pseudocode =
   `for j from 0 to W do:
@@ -31,23 +31,23 @@ const zeroes = dimensions => {
 
 export class KnapsackAlgorithm implements Algorithm {
   player: ExecutionContextService;
-  rendererContainer: RendererContainer;
+  modelContainer: ModelContainer;
 
   constructor(
     private values: number[],
     private weights: number[],
     private capacity: number
     ) {
-      this.rendererContainer = new RendererContainer(
-        ['problem', new MatrixRenderer()],
-        ['values', new MatrixRenderer()],
-        ['weights', new MatrixRenderer()],
-        ['logger', new LoggerRenderer()]
+      this.modelContainer = new ModelContainer(
+        ['problem', new MatrixModel()],
+        ['values', new MatrixModel()],
+        ['weights', new MatrixModel()],
+        ['logger', new LoggerModel()]
       );
     // Code.loadPseudocode(pseudocode);
   }
 
-  *solve(): IterableIterator<any> {
+  solve(): string {
     const DP: any[] = zeroes([this.values.length + 1, this.capacity + 1]);
     const [problem, valuesR, weightsR, logger] = this.getRenderers();
 
@@ -55,7 +55,7 @@ export class KnapsackAlgorithm implements Algorithm {
     valuesR.initialize([this.values]);
     weightsR.initialize([this.weights]);
 
-    // yield this.delayAndHighlight(1)
+    // this.delayAndHighlight(1)
     for (let i = 0; i <= this.values.length; i++) {
       for (let j = 0; j <= this.capacity; j++) {
         if (i === 0 || j === 0) {
@@ -65,15 +65,15 @@ export class KnapsackAlgorithm implements Algorithm {
           */
           DP[i][0] = 0;
           problem.alter(i, j, DP[i][j]);
-          yield this.player.delay();
+          this.player.delay();
           problem.unAlter(i, j);
         } else if (this.weights[i - 1] <= j) { // take the current item in our collection
           valuesR.mark(0, i - 1);
-          yield this.player.delay();
+          this.player.delay();
           weightsR.mark(0, i - 1);
-          yield this.player.delay();
+          this.player.delay();
           problem.mark(i - 1, j);
-          yield this.player.delay();
+          this.player.delay();
 
           const A = this.values[i - 1] + DP[i - 1][j - this.weights[i - 1]];
           const B = DP[i - 1][j];
@@ -84,11 +84,11 @@ export class KnapsackAlgorithm implements Algorithm {
           if (A > B) {
             DP[i][j] = A;
             problem.alter(i, j, DP[i][j]);
-            yield this.player.delay();
+            this.player.delay();
           } else {
             DP[i][j] = B;
             problem.alter(i, j, DP[i][j]);
-            yield this.player.delay();
+            this.player.delay();
           }
 
           problem.unMark(i - 1, j);
@@ -98,17 +98,17 @@ export class KnapsackAlgorithm implements Algorithm {
         } else { // leave the current item from our collection
           DP[i][j] = DP[i - 1][j];
           problem.alter(i, j, DP[i][j]);
-          yield this.player.delay();
+          this.player.delay();
           problem.unAlter(i, j);
         }
       }
     }
 
-    yield this.player.delay();
+    this.player.delay();
     logger.log(printMatrix(DP));
-    yield this.player.delay();
+    this.player.delay();
     logger.logLine(`Best value we can achieve is ${DP[this.values.length][this.capacity]}`);
-    yield this.player.delay();
+    this.player.delay();
     return `Best value we can achieve is ${DP[this.values.length][this.capacity]}`;
   }
 
@@ -126,16 +126,16 @@ export class KnapsackAlgorithm implements Algorithm {
 
   private getRenderers(): any[] {
     return [
-      this.rendererContainer.find('problem') as MatrixRenderer,
-      this.rendererContainer.find('values') as MatrixRenderer,
-      this.rendererContainer.find('weights') as MatrixRenderer,
-      this.rendererContainer.find('logger') as LoggerRenderer
+      this.modelContainer.find('problem') as MatrixModel,
+      this.modelContainer.find('values') as MatrixModel,
+      this.modelContainer.find('weights') as MatrixModel,
+      this.modelContainer.find('logger') as LoggerModel
     ];
   }
 
   private async delayAndHighlight(index) {
     // Code.highlightLine(index);
-    // await this.player.delay();
+    // this.player.delay();
     // Code.stopHighlightingLine(index);
   }
 }

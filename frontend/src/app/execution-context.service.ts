@@ -8,137 +8,126 @@ import { HistoryService } from './history.service';
   providedIn: 'root'
 })
 export class ExecutionContextService {
-  private solve: (end?: boolean) => any;
-  private algorithm: Algorithm;
   private stepSubject = new Subject<number>();
   private maxStepSubject = new Subject<number>();
 
-  stepsExecuted = 0;
-  timeDelay = 0;
-  stopPoint: number;
-  oldSpeed: number;
+  private algorithm: Algorithm;
+  private timeDelay = 1000;
+  private uniquePlay: (end?: boolean) => Promise<any>;
 
-  constructor(private history: HistoryService) { }
+  stepsExecuted = 0;
+  isPaused: boolean;
+  solution: any;
+
+  constructor(private history: HistoryService) {
+    this.uniquePlay = this.makeSingle(this, this.playCycle);
+  }
 
   setUpContext(algorithm: Algorithm, options: Options) {
+    this.linkAlgorithm(algorithm);
+    this.reset();
+
+    this.solution = algorithm.solve();
+
+    this.stepsExecuted = 0;
+    this.notifyTotalSteps();
+    this.renderStep(0);
+
+    if (options.autoplay) { setTimeout(() => this.play(), 0); }
+
+    if (options.skip) {
+      this.changeStep(this.history.getTotalSteps());
+      setTimeout(() => this.notifyStepChange(this.history.getTotalSteps()), 0);
+    }
+  }
+
+  private linkAlgorithm(algorithm: Algorithm) {
     algorithm.player = this;
     this.algorithm = algorithm;
-    this.noRender();
-    this.reset();
-    this.solve = this.makeSingle(algorithm, algorithm.solve);
-
-    return this.calculateStepsAndShow();
   }
 
-  noRender(value = true) {
-    this.algorithm.rendererContainer.noRender(value);
-  }
-
-  reset() {
-    if (this.solve) { this.solve(true); }
+  private reset() {
     this.history.clear();
     this.pause();
-    this.stopPoint = undefined;
-    this.restart();
-    this.sendStep();
+    this.stepsExecuted = 0;
+    this.notifyStepChange();
   }
 
   setSpeed(speed: number) {
     this.timeDelay = speed;
   }
 
-  isPaused() {
-    return this.timeDelay === Number.MAX_VALUE;
-  }
-
   pause() {
-    this.setSpeed(Number.MAX_VALUE);
+    this.isPaused = true;
   }
 
-  isPrevious(stopPoint: number) {
-    return stopPoint < this.stepsExecuted;
-  }
-
-  async delay() {
-    if (this.algorithm.rendererContainer.isRendering()) {
-      this.sendStep();
-    } else if (!this.stopPoint) {
-      this.history.addStep(this.algorithm.rendererContainer);
-    }
-
+  delay() {
+    this.history.addStep(this.algorithm.modelContainer);
     this.stepsExecuted++;
+  }
 
-    if (this.stopPoint && this.stopPoint === this.stepsExecuted) {
-      this.stopPoint = undefined;
-      this.noRender(false);
-      this.setSpeed(this.oldSpeed);
-    }
-
+  private async sleep() {
+    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     const start = new Date().getTime();
 
-    while (new Date().getTime() - start < this.timeDelay) {
-      await this.sleep(1);
+    while (new Date().getTime() - start < this.timeDelay || this.isPaused) {
+      await delay(1);
     }
   }
 
-  private sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  play(): Promise<any> {
+    this.isPaused = false;
+    return this.uniquePlay();
   }
 
-  async play() {
-    if (this.stopPoint) { return this.playUntilStopPoint(); }
-    if (this.stepsExecuted > 0) { return; }
+  private *playCycle() {
+    while (this.stepsExecuted < this.history.getTotalSteps()) {
+      this.notifyStepChange();
+      this.renderStep(this.stepsExecuted++);
+      yield this.sleep();
+    }
 
-    this.renderStep(0);
-
-    return await this.solve();
-  }
-
-  async calculateStepsAndShow() {
-    this.setSpeed(0);
-
-    const solution = await this.solve();
-
-    this.sendMaxStep();
-    this.noRender(false);
-    this.restart();
-
-    this.algorithm.rendererContainer.resetAll();
-    this.algorithm.rendererContainer.renderAll();
-    return solution;
-  }
-
-  async playUntilStopPoint() {
-    this.oldSpeed = this.timeDelay;
-    this.setSpeed(0);
-    this.noRender();
-
-    return await this.solve();
-  }
-
-  restart() {
+    this.pause();
     this.stepsExecuted = 0;
+    return this.solution;
   }
 
   changeStep(step: number) {
+    this.pause();
+    this.uniquePlay(true);
+    this.stepsExecuted = step === this.history.getTotalSteps() ? 0 : step;
     this.renderStep(step);
-    this.restart();
-    this.stopPoint = step === this.history.getTotalSteps() ? undefined : step;
   }
 
   private renderStep(step: number) {
-    this.algorithm.rendererContainer.setData(this.history.getStep(step));
-    this.algorithm.rendererContainer.renderAll();
+    this.algorithm.modelContainer.setData(this.history.getStep(step));
+    this.algorithm.modelContainer.renderAll();
   }
 
-  private makeSingle(context: Algorithm, generator: () => any) {
+  notifyStepChange(step?: number) {
+    this.stepSubject.next(step || this.stepsExecuted);
+  }
+
+  subscribeSteps(): Observable<number> {
+    return this.stepSubject.asObservable();
+  }
+
+  notifyTotalSteps() {
+    this.maxStepSubject.next(this.history.getTotalSteps());
+  }
+
+  subscribeTotalSteps() {
+    return this.maxStepSubject.asObservable();
+  }
+
+  private makeSingle(context: ExecutionContextService, generator: () => any) {
     let globalNonce;
     return async (end: boolean = false) => {
       const localNonce = globalNonce = new Object();
       if (end) { return; }
       const iter = generator.call(context);
       let resumeValue;
-      for (;;) {
+      for (; ;) {
         const n = iter.next(resumeValue);
 
         if (n.done) { return n.value; }
@@ -147,21 +136,5 @@ export class ExecutionContextService {
         if (localNonce !== globalNonce) { return; }
       }
     };
-  }
-
-  sendStep() {
-    this.stepSubject.next(this.stepsExecuted);
-  }
-
-  getSteps(): Observable<number> {
-    return this.stepSubject.asObservable();
-  }
-
-  sendMaxStep() {
-    this.maxStepSubject.next(this.history.getTotalSteps());
-  }
-
-  getMaxSteps() {
-    return this.maxStepSubject.asObservable();
   }
 }

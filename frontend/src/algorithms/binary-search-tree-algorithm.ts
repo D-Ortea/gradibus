@@ -1,8 +1,8 @@
 import { Algorithm } from './algorithm';
-import { RendererContainer } from 'src/app/renderers/renderer-container';
+import { ModelContainer } from 'src/app/renderers/renderer-container';
 import { ExecutionContextService } from 'src/app/execution-context.service';
-import { TreeRenderer } from 'src/app/renderers/tree-renderer';
-import { LoggerRenderer } from 'src/app/renderers/logger-renderer';
+import { LoggerModel } from 'src/app/models/logger-model';
+import { TreeModel } from 'src/app/models/tree-model';
 
 
 class Node {
@@ -11,20 +11,20 @@ class Node {
 }
 
 export class BinarySearchTreeAlgorithm implements Algorithm {
-  rendererContainer: RendererContainer;
+  modelContainer: ModelContainer;
   player: ExecutionContextService;
   root: Node;
   operation: () => any;
 
-  logger: LoggerRenderer;
-  treeR: TreeRenderer;
+  logger: LoggerModel;
+  treeR: TreeModel;
 
   constructor() {
-    this.rendererContainer = new RendererContainer(
-      ['logger', new LoggerRenderer()]
+    this.modelContainer = new ModelContainer(
+      ['logger', new LoggerModel()]
     );
-    // this.treeR = this.rendererContainer.find('tree') as TreeRenderer;
-    this.logger = this.rendererContainer.find('logger') as LoggerRenderer;
+    // this.treeR = this.rendererContainer.find('tree') as TreeModel;
+    this.logger = this.modelContainer.find('logger') as LoggerModel;
     this.root = null;
   }
 
@@ -34,63 +34,63 @@ export class BinarySearchTreeAlgorithm implements Algorithm {
     this.operation = fn;
   }
 
-  *solve() {
-      yield this.operation();
+  solve() {
+      this.operation();
       return true;
    }
 
-  async create(values: number[]) {
+  create(values: number[]) {
     for (const value of values) {
-      await this.player.delay();
+      this.player.delay();
       this.logger.logLine(`Inserting node (${value})`);
-      await this.insert(value);
+      this.insert(value);
       this.logger.logLine(this.getTreeStr(this.root));
     }
     return this.root;
   }
 
-  async search(value: number) {
+  search(value: number) {
     let walk = this.root;
 
     this.logger.logLine(`Searching node (${value})`);
-    await this.player.delay();
+    this.player.delay();
 
     while (walk) {
       this.logger.logLine(`At node (${walk.value})`);
-      await this.player.delay();
+      this.player.delay();
       if (walk.value === value) {
-        await this.player.delay();
+        this.player.delay();
         this.logger.logLine(`Node (${value}) found!!`);
         return walk;
       }
 
-      walk = await this.walkDown(walk, value);
+      walk = this.walkDown(walk, value);
     }
 
     this.logger.logLine(`Node (${walk}) not found!!`);
-    await this.player.delay();
+    this.player.delay();
     return walk.value;
   }
 
-  private async walkDown(walk: Node, value: number): Promise<Node> {
+  private walkDown(walk: Node, value: number): Node {
     if (value < walk.value) {
       this.logger.logLine(`[(${value}) > (${walk.value})] Walking right...`);
-      await this.player.delay();
+      this.player.delay();
       walk = walk.left;
     } else {
       this.logger.logLine(`[(${value}) < (${walk.value})] Walking left...`);
-      await this.player.delay();
+      this.player.delay();
       walk = walk.right;
     }
     return walk;
   }
 
-  async insert(value: number) {
+  insert(value: number) {
     if (!this.root) {
       this.root = new Node(value);
       this.logger
         .logLine(`No root node. Creating root node (${value})`);
-      await this.player.delay();
+      this.player.delay();
       return;
     }
 
@@ -99,27 +99,27 @@ export class BinarySearchTreeAlgorithm implements Algorithm {
     while (walk) {
       // this.treeR.compare(value, walk);
       this.logger.logLine(`At node (${walk.value})`);
-      await this.player.delay();
+      this.player.delay();
 
       if (walk.value === value) {
         this.logger.logLine(`Node already exists (${value})`);
-        await this.player.delay();
+        this.player.delay();
         // this.treeR.removeCompare();
         return `Node already exists (${value})`;
       }
 
-      walk = await this.walkDownOrCreate(walk, value);
+      walk = this.walkDownOrCreate(walk, value);
     }
     // this.treeR.removeCompare();
     this.logger.logLine(this.getTreeStr(this.root));
-    await this.player.delay();
+    this.player.delay();
   }
 
-  private async walkDownOrCreate(walk: Node, value: number): Promise<Node> {
+  private walkDownOrCreate(walk: Node, value: number): Node {
     if (value > walk.value) {
       if (walk.right) {
         this.logger.logLine(`[(${value}) > (${walk.value})] Walking right`);
-        await this.player.delay();
+        this.player.delay();
         walk = walk.right;
       } else {
         this.createNode(value, walk, 'right');
@@ -128,7 +128,7 @@ export class BinarySearchTreeAlgorithm implements Algorithm {
     } else {
       if (walk.left) {
         this.logger.logLine(`[(${value}) < (${walk.value})] Walking left`);
-        await this.player.delay();
+        this.player.delay();
         walk = walk.left;
       } else {
         this.createNode(value, walk, 'left');
@@ -138,12 +138,12 @@ export class BinarySearchTreeAlgorithm implements Algorithm {
     return walk;
   }
 
-  private async createNode(value: number, parent: Node, side: string) {
+  private createNode(value: number, parent: Node, side: string) {
     this.logger.logLine(`(${value}) not found. Creating Node...`);
-    await this.player.delay();
+    this.player.delay();
     parent[side] = new Node(value);
     // this.treeR.insertion(this.root, parent[side]);
-    // await this.player.delay();
+    // this.player.delay();
     // this.treeR.markEdge(parent, parent[side]);
   }
 
