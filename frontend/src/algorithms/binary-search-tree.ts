@@ -1,8 +1,7 @@
-import { Algorithm } from './algorithm';
-import { ModelContainer } from 'src/app/renderers/renderer-container';
-import { ExecutionContextService } from 'src/app/execution-context.service';
+import { ModelFactory } from 'src/app/models/model-factory';
 import { LoggerModel } from 'src/app/models/logger-model';
 import { TreeModel } from 'src/app/models/tree-model';
+import { AbstractAlgorithm } from './abstract-algorithm';
 
 
 class Node {
@@ -10,34 +9,19 @@ class Node {
   }
 }
 
-export class BinarySearchTreeAlgorithm implements Algorithm {
-  modelContainer: ModelContainer;
-  player: ExecutionContextService;
-  root: Node;
-  operation: () => any;
+export class BinarySearchTree extends AbstractAlgorithm {
 
-  logger: LoggerModel;
-  treeR: TreeModel;
+  private logger: LoggerModel;
+  private treeR: TreeModel;
+
+  root: Node;
 
   constructor() {
-    this.modelContainer = new ModelContainer(
-      ['logger', new LoggerModel()]
-    );
-    // this.treeR = this.rendererContainer.find('tree') as TreeModel;
-    this.logger = this.modelContainer.find('logger') as LoggerModel;
+    super();
+    // this.treeR = ModelFactory.getTreeModel(this.modelContainer);
+    this.logger = ModelFactory.getLoggerModel(this.modelContainer);
     this.root = null;
   }
-
-  setOperation(fn: () => void, reset = false) {
-    console.log('Reset is' + reset);
-    if (reset) { this.root = undefined; }
-    this.operation = fn;
-  }
-
-  solve() {
-      this.operation();
-      return true;
-   }
 
   create(values: number[]) {
     for (const value of values) {

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { KnapsackInputComponent } from './input-components/knapsack-input/knapsack-input.component';
 import { BinarySearchTreeInputComponent } from './input-components/binary-search-tree-input/binary-search-tree-input.component';
+import { BubbleSortInputComponent } from './input-components/bubble-sort/bubble-sort-input.component';
 
 export class AlgorithmMetadata {
   video: string;
@@ -28,7 +29,7 @@ export class AlgorithmService {
       new AlgorithmMetadata('Binary Search Tree', 'BST.mp4',
         ['tree', 'BST', 'search', 'branch and bound'],
         BinarySearchTreeInputComponent),
-      new AlgorithmMetadata('Bubble Sort', 'bubble-sort.mp4', ['sort', 'brute force'],  {}),
+      new AlgorithmMetadata('Bubble Sort', 'bubble-sort.mp4', ['sort', 'brute force'], BubbleSortInputComponent),
       new AlgorithmMetadata('Merge Sort', 'merge-sort.mp4', ['sort', 'divide and conquer'],  {}),
       new AlgorithmMetadata('Quicksort', 'quicksort.mp4', ['sort', 'divide and conquer'],  {}),
       new AlgorithmMetadata('Radix Sort', 'radix-sort.mp4', ['sort', 'divide and conquer'],  {}),

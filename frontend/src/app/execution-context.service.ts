@@ -36,8 +36,8 @@ export class ExecutionContextService {
     if (options.autoplay) { setTimeout(() => this.play(), 0); }
 
     if (options.skip) {
-      this.changeStep(this.history.getTotalSteps());
-      setTimeout(() => this.notifyStepChange(this.history.getTotalSteps()), 0);
+      this.changeStep(this.history.getMaxStep());
+      setTimeout(() => this.notifyStepChange(this.history.getMaxStep()), 0);
     }
   }
 
@@ -67,11 +67,13 @@ export class ExecutionContextService {
   }
 
   private async sleep() {
-    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    const time = (ms: number) =>
+      new Promise(resolve => setTimeout(resolve, ms));
+
     const start = new Date().getTime();
 
     while (new Date().getTime() - start < this.timeDelay || this.isPaused) {
-      await delay(1);
+      await time(1);
     }
   }
 
@@ -81,7 +83,7 @@ export class ExecutionContextService {
   }
 
   private *playCycle() {
-    while (this.stepsExecuted < this.history.getTotalSteps()) {
+    while (this.stepsExecuted <= this.history.getMaxStep()) {
       this.notifyStepChange();
       this.renderStep(this.stepsExecuted++);
       yield this.sleep();
@@ -95,7 +97,7 @@ export class ExecutionContextService {
   changeStep(step: number) {
     this.pause();
     this.uniquePlay(true);
-    this.stepsExecuted = step === this.history.getTotalSteps() ? 0 : step;
+    this.stepsExecuted = step === this.history.getMaxStep() ? 0 : step;
     this.renderStep(step);
   }
 
@@ -113,7 +115,7 @@ export class ExecutionContextService {
   }
 
   notifyTotalSteps() {
-    this.maxStepSubject.next(this.history.getTotalSteps());
+    this.maxStepSubject.next(this.history.getMaxStep());
   }
 
   subscribeTotalSteps() {

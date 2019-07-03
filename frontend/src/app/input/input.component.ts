@@ -21,4 +21,9 @@ export class InputComponent implements OnInit {
     this.renderService.sendAlgorithm(algo);
     this.executionContext.setUpContext(algo, options);
   }
+
+  sendFunction(algo: Algorithm, fn: () => any, options: Options) {
+    algo.setOperation(fn);
+    this.loadAlgorithmContext(algo, options);
+  }
 }

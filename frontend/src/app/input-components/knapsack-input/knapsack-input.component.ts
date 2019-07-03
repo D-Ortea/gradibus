@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { KnapsackAlgorithm } from 'src/algorithms/knapsack-algorithm';
+import { Knapsack } from 'src/algorithms/knapsack';
 import { InputComponent } from 'src/app/input/input.component';
 
 @Component({
@@ -20,10 +20,10 @@ export class KnapsackInputComponent extends InputComponent implements OnInit {
 
   loadAlgoritm(options = { autoplay: true, skip: false, delete: true }) {
     const parse = (str: string) => str.split(',').map(num => +num);
-    const algo = new KnapsackAlgorithm(parse(this.values), parse(this.weights)
+    const algo = new Knapsack(parse(this.values), parse(this.weights)
       , this.capacity);
 
-    super.loadAlgorithmContext(algo, options);
+    super.sendFunction(algo, algo.resolve, options);
   }
 
 }

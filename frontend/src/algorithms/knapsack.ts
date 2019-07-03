@@ -1,8 +1,7 @@
-import { Algorithm } from './algorithm';
-import { ExecutionContextService } from 'src/app/execution-context.service';
-import { ModelContainer } from 'src/app/renderers/renderer-container';
+import { ModelFactory } from 'src/app/models/model-factory';
 import { MatrixModel } from 'src/app/models/matrix-model';
 import { LoggerModel } from 'src/app/models/logger-model';
+import { AbstractAlgorithm } from './abstract-algorithm';
 
 const pseudocode =
   `for j from 0 to W do:
@@ -15,45 +14,31 @@ const pseudocode =
           else:
               m[i, j] := max(m[i-1, j], m[i-1, j-w[i]] + v[i])`;
 
-
-const printMatrix = matrix => matrix.map(row => row.toString().replace(/,/g, ' ') + '\n')
-  .toString().replace(/,/g, '');
-
-const zeroes = dimensions => {
-  const arr = [];
-
-  for (let i = 0; i < dimensions[0]; i++) {
-    arr.push(dimensions.length === 1 ? 0 : zeroes(dimensions.slice(1)));
-  }
-
-  return arr;
-};
-
-export class KnapsackAlgorithm implements Algorithm {
-  player: ExecutionContextService;
-  modelContainer: ModelContainer;
+export class Knapsack extends AbstractAlgorithm {
+  private logger: LoggerModel;
+  private problem: MatrixModel;
+  private valuesModel: MatrixModel;
+  private weightsModel: MatrixModel;
 
   constructor(
     private values: number[],
     private weights: number[],
     private capacity: number
-    ) {
-      this.modelContainer = new ModelContainer(
-        ['problem', new MatrixModel()],
-        ['values', new MatrixModel()],
-        ['weights', new MatrixModel()],
-        ['logger', new LoggerModel()]
-      );
+  ) {
+    super();
+    this.logger = ModelFactory.getLoggerModel(this.modelContainer);
+    this.problem = ModelFactory.getMatrixModel(this.modelContainer);
+    this.valuesModel = ModelFactory.getMatrixModel(this.modelContainer);
+    this.weightsModel = ModelFactory.getMatrixModel(this.modelContainer);
     // Code.loadPseudocode(pseudocode);
   }
 
-  solve(): string {
-    const DP: any[] = zeroes([this.values.length + 1, this.capacity + 1]);
-    const [problem, valuesR, weightsR, logger] = this.getRenderers();
+  resolve(): string {
+    const DP: any[] = this.zeroes([this.values.length + 1, this.capacity + 1]);
 
-    problem.initialize(DP);
-    valuesR.initialize([this.values]);
-    weightsR.initialize([this.weights]);
+    this.problem.initialize(DP);
+    this.valuesModel.initialize([this.values]);
+    this.weightsModel.initialize([this.weights]);
 
     // this.delayAndHighlight(1)
     for (let i = 0; i <= this.values.length; i++) {
@@ -64,15 +49,15 @@ export class KnapsackAlgorithm implements Algorithm {
           then the total weight in our collection is 0
           */
           DP[i][0] = 0;
-          problem.alter(i, j, DP[i][j]);
+          this.problem.alter(i, j, DP[i][j]);
           this.player.delay();
-          problem.unAlter(i, j);
+          this.problem.unAlter(i, j);
         } else if (this.weights[i - 1] <= j) { // take the current item in our collection
-          valuesR.mark(0, i - 1);
+          this.valuesModel.mark(0, i - 1);
           this.player.delay();
-          weightsR.mark(0, i - 1);
+          this.weightsModel.mark(0, i - 1);
           this.player.delay();
-          problem.mark(i - 1, j);
+          this.problem.mark(i - 1, j);
           this.player.delay();
 
           const A = this.values[i - 1] + DP[i - 1][j - this.weights[i - 1]];
@@ -83,54 +68,33 @@ export class KnapsackAlgorithm implements Algorithm {
            */
           if (A > B) {
             DP[i][j] = A;
-            problem.alter(i, j, DP[i][j]);
+            this.problem.alter(i, j, DP[i][j]);
             this.player.delay();
           } else {
             DP[i][j] = B;
-            problem.alter(i, j, DP[i][j]);
+            this.problem.alter(i, j, DP[i][j]);
             this.player.delay();
           }
 
-          problem.unMark(i - 1, j);
-          problem.unAlter(i, j);
-          weightsR.unMark(0, i - 1);
-          valuesR.unMark(0, i - 1);
+          this.problem.unMark(i - 1, j);
+          this.problem.unAlter(i, j);
+          this.weightsModel.unMark(0, i - 1);
+          this.valuesModel.unMark(0, i - 1);
         } else { // leave the current item from our collection
           DP[i][j] = DP[i - 1][j];
-          problem.alter(i, j, DP[i][j]);
+          this.problem.alter(i, j, DP[i][j]);
           this.player.delay();
-          problem.unAlter(i, j);
+          this.problem.unAlter(i, j);
         }
       }
     }
 
     this.player.delay();
-    logger.log(printMatrix(DP));
+    this.logger.log(this.printMatrix(DP));
     this.player.delay();
-    logger.logLine(`Best value we can achieve is ${DP[this.values.length][this.capacity]}`);
+    this.logger.logLine(`Best value we can achieve is ${DP[this.values.length][this.capacity]}`);
     this.player.delay();
     return `Best value we can achieve is ${DP[this.values.length][this.capacity]}`;
-  }
-
-  findSolution(keep, k) {
-    let j = +this.capacity;
-    const result = { value: k[this.values.length][+this.capacity], tuple: [] };
-    for (let i = this.values.length; i > 0; i--) {
-      if (keep[i][j] === 1) {
-        result.tuple.unshift(i - 1);
-        j -= this.weights[i - 1];
-      }
-    }
-    return result;
-  }
-
-  private getRenderers(): any[] {
-    return [
-      this.modelContainer.find('problem') as MatrixModel,
-      this.modelContainer.find('values') as MatrixModel,
-      this.modelContainer.find('weights') as MatrixModel,
-      this.modelContainer.find('logger') as LoggerModel
-    ];
   }
 
   private async delayAndHighlight(index) {
@@ -138,8 +102,22 @@ export class KnapsackAlgorithm implements Algorithm {
     // this.player.delay();
     // Code.stopHighlightingLine(index);
   }
-}
 
+  private printMatrix(matrix: any[]): string {
+    return matrix.map(row => row.toString().replace(/,/g, ' ') + '\n')
+      .toString().replace(/,/g, '');
+  }
+
+  private zeroes(dimensions: any[]) {
+    const arr = [];
+
+    for (let i = 0; i < dimensions[0]; i++) {
+      arr.push(dimensions.length === 1 ? 0 : this.zeroes(dimensions.slice(1)));
+    }
+
+    return arr;
+  }
+}
 
 // let keep = [];
 // for (let i = 1; i <= this.values.length; i++) {
@@ -151,11 +129,11 @@ export class KnapsackAlgorithm implements Algorithm {
 //       && k[i - 1][j] < this.values[i - 1]
 //        + k[i - 1][j - this.weights[i - 1]]) {
 //       // yield this.delayAndHighlight(7);
-//       valuesR.mark(0, i - 1);
+//       this.valueModel.mark(0, i - 1);
 //       yield this.player.delay();
-//       weightsR.mark(0, i - 1);
+//       this.weightsModel.mark(0, i - 1);
 //       yield this.player.delay();
-//       problem.mark(i - 1, j);
+//       this.problemModel.mark(i - 1, j);
 
 //       k[i][j] = this.values[i - 1] + k[i - 1][j - this.weights[i - 1]];
 //       keep[i][j] = 1;
@@ -168,14 +146,27 @@ export class KnapsackAlgorithm implements Algorithm {
 //     }
 
 //     yield this.player.delay();
-//     problem.mark(i - 1, j);
+//     this.problemModel.mark(i - 1, j);
 //     yield this.player.delay();
-//     problem.alter(i, j, k[i][j]);
+//     this.problemModel.alter(i, j, k[i][j]);
 //     yield this.player.delay();
-//     problem.unMark(i - 1, j);
+//     this.problemModel.unMark(i - 1, j);
 //     yield this.player.delay();
-//     problem.unAlter(i, j);
+//     this.problemModel.unAlter(i, j);
 //   }
+// }
+
+
+// private findSolution(keep, k) {
+//   let j = +this.capacity;
+//   const result = { value: k[this.values.length][+this.capacity], tuple: [] };
+//   for (let i = this.values.length; i > 0; i--) {
+//     if (keep[i][j] === 1) {
+//       result.tuple.unshift(i - 1);
+//       j -= this.weights[i - 1];
+//     }
+//   }
+//   return result;
 // }
 
 // console.log(printMatrix(k));

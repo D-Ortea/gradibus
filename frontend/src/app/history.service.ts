@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ModelContainer } from './renderers/renderer-container';
+import { ModelContainer } from './renderers/model-container';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,7 @@ export class HistoryService {
     return this.lastContainer.copyAll(this.algorithmSteps[index]);
   }
 
-  getTotalSteps(): number {
+  getMaxStep(): number {
     return this.algorithmSteps.length - 1;
   }
 

@@ -13,6 +13,7 @@ import { KnapsackInputComponent } from './input-components/knapsack-input/knapsa
 import { InputDirective } from './input.directive';
 import { RenderComponent } from './render/render.component';
 import { BinarySearchTreeInputComponent } from './input-components/binary-search-tree-input/binary-search-tree-input.component';
+import { BubbleSortInputComponent } from './input-components/bubble-sort/bubble-sort-input.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { BinarySearchTreeInputComponent } from './input-components/binary-search
     InputDirective,
     RenderComponent,
     BinarySearchTreeInputComponent,
+    BubbleSortInputComponent,
 
   ],
   imports: [
@@ -36,7 +38,8 @@ import { BinarySearchTreeInputComponent } from './input-components/binary-search
   entryComponents: [
      KnapsackInputComponent,
      BinarySearchTreeInputComponent,
-      ],
+     BubbleSortInputComponent,
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

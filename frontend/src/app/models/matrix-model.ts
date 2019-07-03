@@ -1,8 +1,10 @@
 import { Model } from './model';
 import { MatrixRenderer } from '../renderers/matrix-renderer';
+import { Item } from './Item';
 
 export class MatrixModel implements Model {
-  private matrix: Cell[][];
+
+  private matrix: Item[][];
 
   renderer: MatrixRenderer;
 
@@ -12,22 +14,22 @@ export class MatrixModel implements Model {
   }
 
   initialize(array: any[]): void {
-    this.matrix = array.map(row => row.map((cell: any) => new Cell(cell)));
+    this.matrix = array.map(row => row.map((cell: any) => new Item(cell)));
   }
 
   reset(): void {
     this.matrix.forEach(row => row.forEach(cell => cell.reset()));
   }
 
-  getData(): Cell[][] {
+  getData(): Item[][] {
     return this.matrix;
   }
 
-  setData(newMatrix: Cell[][]): void {
+  setData(newMatrix: Item[][]): void {
     this.matrix = newMatrix;
   }
 
-  getCopy(data?: Cell[][]): Cell[][] {
+  getCopy(data?: Item[][]): Item[][] {
     const matrix = data || this.matrix;
     return matrix.map(row => row.map(cell => cell.copy()));
   }
@@ -63,22 +65,5 @@ export class MatrixModel implements Model {
 
   unMarkColumn(y: number) {
     this.matrix.forEach(row => row[y].marked = false);
-  }
-}
-
-
-export class Cell {
-  constructor(
-    public value: any,
-    public marked: boolean = false,
-    public changed: boolean = false
-  ) { }
-
-  copy() {
-    return new Cell(this.value, this.marked, this.changed);
-  }
-
-  reset() {
-    [this.value, this.marked, this.changed] = [0, false, false];
   }
 }
