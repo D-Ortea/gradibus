@@ -24,8 +24,10 @@ export class ModelContainer {
     return copy;
   }
 
-  renderAll() {
-    for (const [_, model] of this.models) { model.renderer.render(model.getData()); }
+  renderAll(animationSpeed: number, options?: {}) {
+    for (const [_, model] of this.models) {
+      model.renderer.render(model.getData(), animationSpeed);
+    }
   }
 
   resetAll() {
@@ -40,7 +42,9 @@ export class ModelContainer {
   }
 
   appendInto(elem: HTMLElement) {
-    for (const [_, model] of this.models) { elem.append(model.renderer.renderElement); }
+    for (const [_, model] of this.models) {
+      elem.append(model.renderer.renderElement);
+    }
   }
 
   public [Symbol.iterator]() {

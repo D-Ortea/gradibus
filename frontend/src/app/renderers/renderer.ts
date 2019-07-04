@@ -1,5 +1,5 @@
 export interface Renderer {
   renderElement: HTMLElement;
 
-  render(data: any): void;
+  render(data: any, options?: any): void;
 }

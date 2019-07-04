@@ -46,7 +46,7 @@ export class BarChartModel implements Model {
   swap(i: number, j: number) {
     this.array[i].changed = true;
     this.array[j].changed = true;
-    [this.array[j], this.array[i]] = [this.array[j], this.array[i]];
+    [this.array[i], this.array[j]] = [this.array[j], this.array[i]];
   }
 
   insert(value: any) {

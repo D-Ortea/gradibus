@@ -103,7 +103,7 @@ export class ExecutionContextService {
 
   private renderStep(step: number) {
     this.algorithm.modelContainer.setData(this.history.getStep(step));
-    this.algorithm.modelContainer.renderAll();
+    this.algorithm.modelContainer.renderAll(this.timeDelay);
   }
 
   notifyStepChange(step?: number) {

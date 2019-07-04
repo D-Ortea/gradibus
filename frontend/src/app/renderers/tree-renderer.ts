@@ -106,23 +106,23 @@ export class TreeRenderer implements Renderer {
   }
 
   tree() {
-    const root = d3.hierarchy(this.data);
-    root.dx = 80;
-    root.dy = 500 / (root.height + 1);
-    const tree = d3.tree().nodeSize([root.dx, root.dy])(root);
-    const newTree = tree.descendants().map(desc => {
-      return {
-        key: makeKey(16),
-        x: Math.floor(desc.x),
-        y: Math.floor(desc.y),
-        val: desc.data.name,
-        links: desc.data.children ? desc.data.children.map(child => child.name) : []
-      };
-    });
+    // const root = d3.hierarchy(this.data);
+    // root.dx = 80;
+    // root.dy = 500 / (root.height + 1);
+    // const tree = d3.tree().nodeSize([root.dx, root.dy])(root);
+    // const newTree = tree.descendants().map(desc => {
+    //   return {
+    //     key: makeKey(16),
+    //     x: Math.floor(desc.x),
+    //     y: Math.floor(desc.y),
+    //     val: desc.data.name,
+    //     links: desc.data.children ? desc.data.children.map(child => child.name) : []
+    //   };
+    // });
 
-    console.log(newTree);
+    // console.log(newTree);
 
-    return newTree;
+    // return newTree;
   }
 
   updateTree() {
@@ -141,17 +141,17 @@ export class TreeRenderer implements Renderer {
 
     const newTree = this.tree();
 
-    for (const el of newTree) {
-      const index = this.currentData.findIndex(elem => elem.val === el.val);
-      if (index === -1) {
-        this.currentData.push(el);
-        continue;
-      }
-      const node = this.currentData[index];
-      [node.x, node.y, node.links] = [el.x, el.y, el.links];
-    }
+    // for (const el of newTree) {
+    //   const index = this.currentData.findIndex(elem => elem.val === el.val);
+    //   if (index === -1) {
+    //     this.currentData.push(el);
+    //     continue;
+    //   }
+    //   const node = this.currentData[index];
+    //   [node.x, node.y, node.links] = [el.x, el.y, el.links];
+    // }
 
-    this.currentData = this.currentData.filter(node => newTree.find(el => el.val === node.val));
+    // this.currentData = this.currentData.filter(node => newTree.find(el => el.val === node.val));
   }
 
   markNode(value) {
@@ -259,7 +259,7 @@ function filterRepeated(edges) {
   return filteredLinks;
 }
 
-function linePoints(d) {
+function linePoints(d): [number, number][] {
   return [
     [d.source.x, d.source.y],
     [d.target.x, d.target.y]

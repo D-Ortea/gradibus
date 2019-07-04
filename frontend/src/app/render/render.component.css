@@ -6,6 +6,27 @@
   background-color: #5599ff;
 }
 
+:host ::ng-deep .mark-bar {
+  fill: blue;
+}
+
+:host ::ng-deep .swap-bar {
+  animation: colorBackAndForth 1s;
+}
+
 :host ::ng-deep .log-rendering {
   border: 1px solid black;
+}
+
+@keyframes colorBackAndForth {
+  0% {
+    fill: red;
+  }
+  80% {
+    fill: red;
+  }
+  100% {
+    fill: black;
+  }
+
 }
