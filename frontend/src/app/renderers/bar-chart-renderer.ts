@@ -9,7 +9,7 @@ export class BarChartRenderer implements Renderer {
   private height: number;
   private width: number;
   private arrayGroup: any;
-  private animationSpeed: number;
+  private transition: d3.Transition<any, any, any, any>;
   private xScale: d3.ScaleBand<string>;
   private yScale: d3.ScaleLinear<number, number>;
   private margin = { top: 20, right: 0, bottom: 30, left: 40 };
@@ -26,7 +26,7 @@ export class BarChartRenderer implements Renderer {
   }
 
   render(array: Item[], animationSpeed: number): void {
-    this.animationSpeed = animationSpeed || 0;
+    this.transition  = d3.transition().duration(animationSpeed / 2);
     this.calculateXandYscales(array);
 
     this.arrayGroup.selectAll('g').data(array, d => d.getId())
@@ -53,7 +53,7 @@ export class BarChartRenderer implements Renderer {
   }
 
   private moveBarToPosition(g) {
-    g.attr('transform',
+    g.transition(this.transition).attr('transform',
       (d: Item) =>
         `translate(${this.xScale(d.getId())}, ${this.yScale(d.value)})`);
   }
@@ -79,10 +79,8 @@ export class BarChartRenderer implements Renderer {
   }
 
   private updateBar(update) {
-    const t = d3.transition().duration(this.animationSpeed / 2);
-
     update.attr('class', (d) => this.parseClass(d))
-      .transition(t).attr('transform',
+      .transition(this.transition).attr('transform',
         (d: Item) =>
           `translate(${this.xScale(d.getId())}, ${this.yScale(d.value)})`);
 
@@ -91,7 +89,6 @@ export class BarChartRenderer implements Renderer {
   }
 
   private parseClass(cell: Item) {
-    console.log('class called!!');
     return `${cell.changed ? 'swap-bar' : ''} ${cell.marked ? 'mark-bar' : ''}`
       .trim();
   }
