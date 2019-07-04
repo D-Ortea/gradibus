@@ -1,31 +1,6 @@
-import { BarChartModel } from 'src/app/models/bar-chart-model';
-import { LoggerModel } from 'src/app/models/logger-model';
-import { AbstractAlgorithm } from './abstract-algorithm';
-import { ModelFactory } from 'src/app/models/model-factory';
+import { AbstractSort } from './abstract-sort';
 
-export class BubbleSort extends AbstractAlgorithm {
-
-  private logger: LoggerModel;
-  private chart: BarChartModel;
-
-
-  array: number[];
-
-  constructor() {
-    super();
-    this.chart = ModelFactory.getBarChartModel(this.modelContainer);
-    this.logger = ModelFactory.getLoggerModel(this.modelContainer);
-    this.array = [];
-  }
-
-  create(array: number[]) {
-    this.array = array;
-    this.chart.initialize(this.array);
-    this.logger.initialize(`Creating array ${this.array}`);
-    this.player.delay();
-    return this.array;
-  }
-
+export class BubbleSort extends AbstractSort {
   sort() {
     const arr = this.array;
     this.logger.logLine(`Bubble Sorting array: (${arr}`);

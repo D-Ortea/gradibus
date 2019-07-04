@@ -16,6 +16,7 @@ import { BinarySearchTreeInputComponent } from './input-components/binary-search
 import { BubbleSortInputComponent } from './input-components/bubble-sort/bubble-sort-input.component';
 import { SelectionSortInputComponent } from './input-components/selection-sort-input/selection-sort-input.component';
 import { InsertionSortInputComponent } from './input-components/insertion-sort-input/insertion-sort-input.component';
+import { SortInputComponent } from './input-components/sort-input-component/sort-input-component.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { InsertionSortInputComponent } from './input-components/insertion-sort-i
     BubbleSortInputComponent,
     SelectionSortInputComponent,
     InsertionSortInputComponent,
+    SortInputComponent,
 
   ],
   imports: [

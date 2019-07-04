@@ -3,8 +3,9 @@ import { LoggerModel } from 'src/app/models/logger-model';
 import { BarChartModel } from 'src/app/models/bar-chart-model';
 import { ModelFactory } from 'src/app/models/model-factory';
 import { MatrixModel } from 'src/app/models/matrix-model';
+import { SortAlgorithm } from './sort-algorithm';
 
-export class InsertionSort extends AbstractAlgorithm {
+export class InsertionSort extends AbstractAlgorithm implements SortAlgorithm {
 
   private chart: BarChartModel;
   private elements: MatrixModel;

@@ -1,30 +1,6 @@
-import { AbstractAlgorithm } from './abstract-algorithm';
-import { BarChartModel } from 'src/app/models/bar-chart-model';
-import { LoggerModel } from 'src/app/models/logger-model';
-import { MatrixModel } from 'src/app/models/matrix-model';
-import { ModelFactory } from 'src/app/models/model-factory';
+import { AbstractSort } from './abstract-sort';
 
-export class SelectionSort extends AbstractAlgorithm {
-
-  private chart: BarChartModel;
-  private logger: LoggerModel;
-
-  array: number[];
-
-  constructor() {
-    super();
-    this.chart = ModelFactory.getBarChartModel(this.modelContainer);
-    this.logger = ModelFactory.getLoggerModel(this.modelContainer);
-  }
-
-  create(array: number[]) {
-    this.array = array;
-    this.chart.initialize(this.array);
-    this.logger.initialize(`Creating array ${this.array}`);
-    this.player.delay();
-    return this.array;
-  }
-
+export class SelectionSort extends AbstractSort {
   sort() {
     const arr = this.array;
     this.logger.logLine(`Selection Sorting array: (${arr}`);
