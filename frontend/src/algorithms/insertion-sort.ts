@@ -31,7 +31,7 @@ export class InsertionSort extends AbstractAlgorithm {
 
   sort() {
     const arr = this.array;
-    this.logger.logLine(`Sorting array: (${arr}`);
+    this.logger.logLine(`Insertion Sorting array: (${arr}`);
     for (let i = 1; i < arr.length; i++) {
       this.player.delay();
       this.elements.mark(0, i);

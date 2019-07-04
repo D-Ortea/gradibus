@@ -28,7 +28,7 @@ export class BubbleSort extends AbstractAlgorithm {
 
   sort() {
     const arr = this.array;
-    this.logger.logLine(`Sorting array: (${arr}`);
+    this.logger.logLine(`Bubble Sorting array: (${arr}`);
     for (let i = arr.length - 1; i > 0; i--) {
       for (let j = 0; j < i; j++) {
         this.player.delay();
