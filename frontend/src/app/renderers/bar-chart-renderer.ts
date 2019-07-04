@@ -47,15 +47,35 @@ export class BarChartRenderer implements Renderer {
   private appendBar(enter) {
     const g = enter.append('g');
 
+    this.moveBarToPosition(g);
+    this.appendRectangle(g);
+    this.appendText(g);
+  }
+
+  private moveBarToPosition(g) {
     g.attr('transform',
       (d: Item) =>
-        `translate(${this.xScale(d.getId())}, ${this.yScale(d.value)})`)
-      .append('rect')
-        .attr('height', (d: Item) => this.yScale(0) - this.yScale(d.value))
-        .attr('width', this.xScale.bandwidth());
+        `translate(${this.xScale(d.getId())}, ${this.yScale(d.value)})`);
+  }
 
-    g.append('text').text((d: Item) => d.value).attr('dy', '-0.5em')
+  private appendRectangle(g) {
+    const rect = g.append('rect');
+    this.updateRectangleDimensions(rect);
+  }
+
+  private appendText(g) {
+    const text = g.append('text').text((d: Item) => d.value);
+    this.updateTextPosition(text);
+  }
+
+  private updateTextPosition(text) {
+    text.attr('dy', '-0.5em')
       .attr('dx', this.xScale.bandwidth() / 2 - 4);
+  }
+
+  private updateRectangleDimensions(rect) {
+    rect.attr('height', (d: Item) => this.yScale(0) - this.yScale(d.value))
+      .attr('width', this.xScale.bandwidth());
   }
 
   private updateBar(update) {
@@ -65,6 +85,9 @@ export class BarChartRenderer implements Renderer {
       .transition(t).attr('transform',
         (d: Item) =>
           `translate(${this.xScale(d.getId())}, ${this.yScale(d.value)})`);
+
+    this.updateRectangleDimensions(update.select('rect'));
+    this.updateTextPosition(update.select('text'));
   }
 
   private parseClass(cell: Item) {

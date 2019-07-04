@@ -66,4 +66,9 @@ export class MatrixModel implements Model {
   unMarkColumn(y: number) {
     this.matrix.forEach(row => row[y].marked = false);
   }
+
+  removeCell(x: number, y: number) {
+    this.matrix[x][y] = null;
+    this.matrix = this.matrix.filter(row => row.filter(el => el !== null));
+  }
 }

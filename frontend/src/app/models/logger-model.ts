@@ -6,11 +6,11 @@ export class LoggerModel implements Model {
 
   renderer: LoggerRenderer;
 
-  get logText() {
+  private get logText() {
     return this.text;
   }
 
-  set logText(newText: string) {
+  private set logText(newText: string) {
     this.text = newText;
   }
 

@@ -14,6 +14,8 @@ import { InputDirective } from './input.directive';
 import { RenderComponent } from './render/render.component';
 import { BinarySearchTreeInputComponent } from './input-components/binary-search-tree-input/binary-search-tree-input.component';
 import { BubbleSortInputComponent } from './input-components/bubble-sort/bubble-sort-input.component';
+import { SelectionSortInputComponent } from './input-components/selection-sort-input/selection-sort-input.component';
+import { InsertionSortInputComponent } from './input-components/insertion-sort-input/insertion-sort-input.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,8 @@ import { BubbleSortInputComponent } from './input-components/bubble-sort/bubble-
     RenderComponent,
     BinarySearchTreeInputComponent,
     BubbleSortInputComponent,
+    SelectionSortInputComponent,
+    InsertionSortInputComponent,
 
   ],
   imports: [
@@ -39,6 +43,8 @@ import { BubbleSortInputComponent } from './input-components/bubble-sort/bubble-
      KnapsackInputComponent,
      BinarySearchTreeInputComponent,
      BubbleSortInputComponent,
+     InsertionSortInputComponent,
+     SelectionSortInputComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

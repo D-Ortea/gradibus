@@ -49,8 +49,8 @@ export class BarChartModel implements Model {
     [this.array[i], this.array[j]] = [this.array[j], this.array[i]];
   }
 
-  insert(value: any) {
-    this.array.push(new Item(value));
+  insert(value: any, i: number) {
+    this.array.splice(i, 0, new Item(value));
   }
 
   remove(i: number) {
