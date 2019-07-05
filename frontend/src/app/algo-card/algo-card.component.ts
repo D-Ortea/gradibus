@@ -9,7 +9,7 @@ export class AlgoCardComponent implements OnInit {
 
   @Input() algorithm;
   @Output() tagfilter = new EventEmitter();
-  overlay: boolean = false;
+  overlay = false;
 
   constructor() { }
 

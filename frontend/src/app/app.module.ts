@@ -16,7 +16,9 @@ import { BinarySearchTreeInputComponent } from './input-components/binary-search
 import { BubbleSortInputComponent } from './input-components/bubble-sort/bubble-sort-input.component';
 import { SelectionSortInputComponent } from './input-components/selection-sort-input/selection-sort-input.component';
 import { InsertionSortInputComponent } from './input-components/insertion-sort-input/insertion-sort-input.component';
-import { SortInputComponent } from './input-components/sort-input-component/sort-input-component.component';
+import { SortInputComponent } from './input-components/sort-input/sort-input.component';
+import { MergeSortInputComponent } from './input-components/merge-sort-input/merge-sort-input.component';
+import { QuicksortInputComponent } from './input-components/quicksort-input/quicksort-input.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,8 @@ import { SortInputComponent } from './input-components/sort-input-component/sort
     SelectionSortInputComponent,
     InsertionSortInputComponent,
     SortInputComponent,
+    MergeSortInputComponent,
+    QuicksortInputComponent,
 
   ],
   imports: [
@@ -46,7 +50,9 @@ import { SortInputComponent } from './input-components/sort-input-component/sort
      BinarySearchTreeInputComponent,
      BubbleSortInputComponent,
      InsertionSortInputComponent,
-     SelectionSortInputComponent
+     SelectionSortInputComponent,
+     MergeSortInputComponent,
+     QuicksortInputComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

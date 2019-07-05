@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SortInputComponent } from './sort-input-component.component';
+import { SortInputComponent } from './sort-input.component';
 
 describe('SortInputComponentComponent', () => {
   let component: SortInputComponent;

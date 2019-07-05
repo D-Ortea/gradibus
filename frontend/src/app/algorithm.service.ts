@@ -4,6 +4,8 @@ import { BinarySearchTreeInputComponent } from './input-components/binary-search
 import { BubbleSortInputComponent } from './input-components/bubble-sort/bubble-sort-input.component';
 import { InsertionSortInputComponent } from './input-components/insertion-sort-input/insertion-sort-input.component';
 import { SelectionSortInputComponent } from './input-components/selection-sort-input/selection-sort-input.component';
+import { MergeSortInputComponent } from './input-components/merge-sort-input/merge-sort-input.component';
+import { QuicksortInputComponent } from './input-components/quicksort-input/quicksort-input.component';
 
 export class AlgorithmMetadata {
   video: string;
@@ -37,8 +39,10 @@ export class AlgorithmService {
         ['sort', 'brute force'], InsertionSortInputComponent),
       new AlgorithmMetadata('Selection Sort', 'bubble-sort.mp4',
         ['sort', 'brute force'], SelectionSortInputComponent),
-      new AlgorithmMetadata('Merge Sort', 'merge-sort.mp4', ['sort', 'divide and conquer'], {}),
-      new AlgorithmMetadata('Quicksort', 'quicksort.mp4', ['sort', 'divide and conquer'], {}),
+      new AlgorithmMetadata('Merge Sort', 'merge-sort.mp4',
+        ['sort', 'divide and conquer'], MergeSortInputComponent),
+      new AlgorithmMetadata('Quicksort', 'quicksort.mp4',
+        ['sort', 'divide and conquer'], QuicksortInputComponent),
       new AlgorithmMetadata('Radix Sort', 'radix-sort.mp4', ['sort', 'divide and conquer'], {}),
       new AlgorithmMetadata('Pidgeonhole Sort', 'pidgeonhole-sort.mp4', ['sort', 'divide and conquer'], {}),
     ];

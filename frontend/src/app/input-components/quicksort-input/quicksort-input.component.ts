@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { InsertionSort } from 'src/algorithms/insertion-sort';
 import { SortInputComponent } from '../sort-input/sort-input.component';
+import { Quicksort } from 'src/algorithms/quicksort';
 
 @Component({
-  selector: 'app-insertion-sort-input',
+  selector: 'app-quicksort-input',
   templateUrl: '../sort-input/sort-input.component.html',
   styleUrls: ['../sort-input/sort-input.component.css']
 })
-export class InsertionSortInputComponent extends SortInputComponent implements OnInit {
+export class QuicksortInputComponent extends SortInputComponent implements OnInit {
 
   ngOnInit() {
-    this.sortAlgo = new InsertionSort();
+    this.sortAlgo = new Quicksort();
     this.create();
   }
+
 }

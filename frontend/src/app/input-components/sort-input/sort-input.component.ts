@@ -4,9 +4,9 @@ import { Algorithm } from 'src/algorithms/algorithm';
 import { SortAlgorithm } from 'src/algorithms/sort-algorithm';
 
 @Component({
-  selector: 'app-sort-input-component',
-  templateUrl: './sort-input-component.component.html',
-  styleUrls: ['./sort-input-component.component.css']
+  selector: 'app-sort-input',
+  templateUrl: './sort-input.component.html',
+  styleUrls: ['./sort-input.component.css']
 })
 export class SortInputComponent extends InputComponent {
 
