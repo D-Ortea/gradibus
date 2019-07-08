@@ -15,7 +15,7 @@ export class Item {
   }
 
   reset() {
-    [this.value, this.marked, this.changed] = [0, false, false];
+    [this.value, this.marked, this.changed] = [undefined, false, false];
   }
 
   getId() {
@@ -24,7 +24,7 @@ export class Item {
   }
 }
 
-function makeKey(length) {
+export function makeKey(length: number) {
   let result = '';
   const characters =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

@@ -3,7 +3,6 @@ import { Item } from '../models/Item';
 import * as d3 from 'd3';
 
 export class BarChartRenderer implements Renderer {
-  renderElement: HTMLDivElement;
 
   private svg: d3.Selection<any, any, any, any>;
   private height: number;
@@ -14,19 +13,21 @@ export class BarChartRenderer implements Renderer {
   private yScale: d3.ScaleLinear<number, number>;
   private margin = { top: 20, right: 0, bottom: 30, left: 40 };
 
+  renderElement: HTMLDivElement;
+
   constructor() {
     this.renderElement = document.createElement('div');
     this.height = 500;
     this.width = 800;
     this.svg = d3.select(this.renderElement).append('svg')
       .attr('width', this.width)
-      .attr('height', this.height).attr('class', 'svg-bar-chart');
+      .attr('height', this.height).attr('class', 'bar-chart-svg');
 
     this.arrayGroup = this.svg.append('g').attr('class', 'array-group');
   }
 
   render(array: Item[], animationSpeed: number): void {
-    this.transition  = d3.transition().duration(animationSpeed / 2);
+    this.transition = d3.transition().duration(animationSpeed / 2);
     this.calculateXandYscales(array);
 
     this.arrayGroup.selectAll('g').data(array, d => d.getId())

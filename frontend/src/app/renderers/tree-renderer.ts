@@ -1,42 +1,47 @@
 import { Renderer } from './renderer';
+import { TreeNode } from '../models/tree-node';
 import * as d3 from 'd3';
+import { makeKey } from '../models/item';
 
 export class TreeRenderer implements Renderer {
-  noRender: boolean;
-  renderElement: HTMLDivElement;
 
-  animationSpeed: number;
+  private transition: d3.Transition<any, any, any, any>;
+  private height: number;
+  private width: number;
+  private svg: d3.Selection<any, any, any, any>;
+  private treeGroup: any;
+  private margin = { top: 20, right: 0, bottom: 30, left: 40 };
+  private edges: any;
+  private nodes: any;
+
+
   currentData: any;
   currentLinks: any[];
   data: any;
-  svg: any;
-  g: any;
-  edges: any;
-  nodes: any;
-  changed: boolean;
   deleted: boolean;
 
-  constructor() { }
+  renderElement: HTMLDivElement;
 
-  initialize(data: any): void {
-    this.data = data;
-    this.animationSpeed = 30;
-    this.createSvg();
+  constructor() {
+    this.renderElement = document.createElement('div');
+    [this.height, this.width] = [500, 800];
+
+    this.renderElement.classList.add('tree-rendering-area');
+    this.svg = d3.select(this.renderElement).append('svg')
+      .attr('class', 'tree-svg')
+      .style('width', this.width).style('height', this.height);
+
+    this.treeGroup = this.svg.append('g');
+    this.treeGroup.attr('transform',
+      `translate(${this.width / 2 - 14}, ${this.margin.top})`);
+
+    this.edges = this.treeGroup.append('g').attr('class', 'edges');
+    this.nodes = this.treeGroup.append('g').attr('class', 'nodes');
   }
 
-  private createSvg() {
-    const renderArea = d3.select(this.renderElement);
-    renderArea.node().innerHTML = '';
-    this.svg = renderArea.append('svg').style('width', '500').style('height', '500');
-    this.g = this.svg.append('g');
-    this.g.attr('transform', `translate(250, 22)`);
+  render(root: TreeNode, animationSpeed: number): void {
+    this.transition = d3.transition().duration(animationSpeed);
 
-    this.edges = this.g.append('g');
-    this.nodes = this.g.append('g');
-  }
-
-
-  render(): void {
     const line = d3.line().x(d => d[0]).y(d => d[1]).curve(d3.curveBasis);
 
     this.currentData = this.tree();
@@ -46,32 +51,22 @@ export class TreeRenderer implements Renderer {
         this.currentLinks = filterRepeated(links(this.currentData));
       }
 
-      if (this.changed) {
-        // Recalculate nodes
-        this.updateTree();
-        // Recalculate links
-        this.currentLinks = filterRepeated(links(this.currentData));
-        this.changed = false;
-      }
-
-
-
       this.nodes.selectAll('g').data(this.currentData, d => d.key).join(
         enter => {
           const g = enter.append('g');
           g.append('circle').attr('class', d => d.val ?
             `node ${d.inserted ? 'node-inserted' : ''}` : 'hidden-node')
-            .attr('r', 20);
+            .attr('r', 28);
 
           g.append('text').attr('transform', d => `translate(${-4}, ${4})`)
             .attr('class', 'node-text').text(d => d.val);
 
           g.attr('transform', d => `translate(${0}, ${0})`)
-            .call(entr => entr.transition(this._t()).attr('transform', d => `translate(${d.x}, ${d.y})`));
+            .call(entr => entr.transition(this.transition).attr('transform', d => `translate(${d.x}, ${d.y})`));
         },
-        update => update.call(updt => updt.transition(this._t()).attr('transform', d => `translate(${d.x}, ${d.y})`)
+        update => update.call(updt => updt.transition(this.transition).attr('transform', d => `translate(${d.x}, ${d.y})`)
           .attr('class', d => `${d.marked ? 'node-marked' : ''}`)),
-        exit => exit.call(ext => ext.transition(this._t()).attr('transform', d => `translate(${-100}, ${-100})`)
+        exit => exit.call(ext => ext.transition(this.transition).attr('transform', d => `translate(${-100}, ${-100})`)
           .attr('class', d => `${d.deleted ? 'node-deleted' : ''}`).remove())
       );
 
@@ -79,11 +74,11 @@ export class TreeRenderer implements Renderer {
         .join(
           enter => enter.append('path')
             .attr('d', d => line(linePoints(d))).attr('stroke', 'greenyellow')
-            .call(entr => entr.transition(this._t()).attr('stroke', 'black')),
+            .call(entr => entr.transition(this.transition).attr('stroke', 'black')),
           update => update.attr('stroke', 'black').attr('d', d => line(linePoints(d)))
-            .call(updt => updt.transition(this._t()).attr('stroke', d => `${d.marked ? 'orange' : 'black'}`)),
+            .call(updt => updt.transition(this.transition).attr('stroke', d => `${d.marked ? 'orange' : 'black'}`)),
           exit => exit.attr('stroke', 'red')
-            .call(ext => ext.transition(this._t()).attr('stroke', 'black').remove())
+            .call(ext => ext.transition(this.transition).attr('stroke', 'black').remove())
         );
 
       return;
@@ -92,13 +87,13 @@ export class TreeRenderer implements Renderer {
 
   createTree(root) {
     const treeBuilder = node => {
-      if (!node) { return {name: undefined}; }
+      if (!node) { return { name: undefined }; }
 
       if (!node.left && !node.right) {
-        return {name: node.value, children: [] };
+        return { name: node.value, children: [] };
       }
 
-      return {name: node.value, children: [treeBuilder(node.left), treeBuilder(node.right)] };
+      return { name: node.value, children: [treeBuilder(node.left), treeBuilder(node.right)] };
     };
 
     const data = treeBuilder(root);
@@ -106,23 +101,23 @@ export class TreeRenderer implements Renderer {
   }
 
   tree() {
-    // const root = d3.hierarchy(this.data);
-    // root.dx = 80;
-    // root.dy = 500 / (root.height + 1);
-    // const tree = d3.tree().nodeSize([root.dx, root.dy])(root);
-    // const newTree = tree.descendants().map(desc => {
-    //   return {
-    //     key: makeKey(16),
-    //     x: Math.floor(desc.x),
-    //     y: Math.floor(desc.y),
-    //     val: desc.data.name,
-    //     links: desc.data.children ? desc.data.children.map(child => child.name) : []
-    //   };
-    // });
+    const root = d3.hierarchy(this.data);
+    root.dx = 80;
+    root.dy = 500 / (root.height + 1);
+    const tree = d3.tree().nodeSize([root.dx, root.dy])(root);
+    const newTree = tree.descendants().map(desc => {
+      return {
+        key: makeKey(16),
+        x: Math.floor(desc.x),
+        y: Math.floor(desc.y),
+        val: desc.data.name,
+        links: desc.data.children ? desc.data.children.map(child => child.name) : []
+      };
+    });
 
-    // console.log(newTree);
+    console.log(newTree);
 
-    // return newTree;
+    return newTree;
   }
 
   updateTree() {
@@ -141,17 +136,17 @@ export class TreeRenderer implements Renderer {
 
     const newTree = this.tree();
 
-    // for (const el of newTree) {
-    //   const index = this.currentData.findIndex(elem => elem.val === el.val);
-    //   if (index === -1) {
-    //     this.currentData.push(el);
-    //     continue;
-    //   }
-    //   const node = this.currentData[index];
-    //   [node.x, node.y, node.links] = [el.x, el.y, el.links];
-    // }
+    for (const el of newTree) {
+      const index = this.currentData.findIndex(elem => elem.val === el.val);
+      if (index === -1) {
+        this.currentData.push(el);
+        continue;
+      }
+      const node = this.currentData[index];
+      [node.x, node.y, node.links] = [el.x, el.y, el.links];
+    }
 
-    // this.currentData = this.currentData.filter(node => newTree.find(el => el.val === node.val));
+    this.currentData = this.currentData.filter(node => newTree.find(el => el.val === node.val));
   }
 
   markNode(value) {
@@ -192,7 +187,7 @@ export class TreeRenderer implements Renderer {
   }
 
   insertion(root, node) {
-    const newData =  this.createTree(root);
+    const newData = this.createTree(root);
     this._findInTree(node.value).inserted = true;
     this.data = newData;
     this.changed = true;
@@ -200,15 +195,11 @@ export class TreeRenderer implements Renderer {
   }
 
   deletion(root, node) {
-    const newData =  this.createTree(root);
+    const newData = this.createTree(root);
     this._findInTree(node.value).deleted = true;
     this.data = newData;
     this.deleted = true;
     this.render();
-  }
-
-  _t() {
-    return this.svg.transition().duration(this.animationSpeed);
   }
 
   _findInTree(value) {
@@ -264,16 +255,4 @@ function linePoints(d): [number, number][] {
     [d.source.x, d.source.y],
     [d.target.x, d.target.y]
   ];
-}
-
-function makeKey(length) {
-  let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-
-  return result;
 }
