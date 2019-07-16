@@ -1,8 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
-  --main-color: #0788b9;
-  --accent-color: #00e7ff;
-  --main-bg-color: #131a21;
+  --main-color: #83d0f2;
+  --accent-color: #83d0f2;
+  --main-bg-color: #222222;
   --secondary-bg-color: rgba(22, 104, 159, 0.2);
 }
 

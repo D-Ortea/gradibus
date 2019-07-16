@@ -2,7 +2,7 @@ import { LoggerModel } from 'src/app/models/logger-model';
 import { MatrixModel } from 'src/app/models/matrix-model';
 import { TreeModel } from 'src/app/models/tree-model';
 import { BarChartModel } from 'src/app/models/bar-chart-model';
-import { ModelContainer } from '../renderers/model-container';
+import { ModelContainer } from './model-container';
 
 export abstract class ModelFactory {
 

@@ -18,16 +18,17 @@ export class BinarySearchTree extends AbstractAlgorithm {
 
   constructor() {
     super();
-    // this.treeR = ModelFactory.getTreeModel(this.modelContainer);
+    this.treeR = ModelFactory.getTreeModel(this.modelContainer);
     this.logger = ModelFactory.getLoggerModel(this.modelContainer);
     this.root = null;
   }
 
   create(values: number[]) {
+    this.logger.reset();
     for (const value of values) {
+      this.insert(value);
       this.player.delay();
       this.logger.logLine(`Inserting node (${value})`);
-      this.insert(value);
       this.logger.logLine(this.getTreeStr(this.root));
     }
     return this.root;
@@ -74,6 +75,7 @@ export class BinarySearchTree extends AbstractAlgorithm {
       this.root = new Node(value);
       this.logger
         .logLine(`No root node. Creating root node (${value})`);
+      this.treeR.initialize(this.root, this.normalize);
       this.player.delay();
       return;
     }
@@ -81,20 +83,20 @@ export class BinarySearchTree extends AbstractAlgorithm {
     let walk = this.root;
 
     while (walk) {
-      // this.treeR.compare(value, walk);
+      this.treeR.compare(value, walk);
       this.logger.logLine(`At node (${walk.value})`);
       this.player.delay();
 
       if (walk.value === value) {
         this.logger.logLine(`Node already exists (${value})`);
         this.player.delay();
-        // this.treeR.removeCompare();
+        this.treeR.removeCompare();
         return `Node already exists (${value})`;
       }
 
       walk = this.walkDownOrCreate(walk, value);
     }
-    // this.treeR.removeCompare();
+    this.treeR.removeCompare();
     this.logger.logLine(this.getTreeStr(this.root));
     this.player.delay();
   }
@@ -126,9 +128,14 @@ export class BinarySearchTree extends AbstractAlgorithm {
     this.logger.logLine(`(${value}) not found. Creating Node...`);
     this.player.delay();
     parent[side] = new Node(value);
-    // this.treeR.insertion(this.root, parent[side]);
-    // this.player.delay();
-    // this.treeR.markEdge(parent, parent[side]);
+    this.treeR.insertion(parent, parent[side]);
+    this.player.delay();
+    this.treeR.markEdge(parent, parent[side]);
+  }
+
+  private normalize(node) {
+    const children = [node.left, node.right].filter(n => n);
+    return children.length === 0 ? undefined : children;
   }
 
   getTreeStr(node: Node) {

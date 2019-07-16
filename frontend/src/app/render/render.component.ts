@@ -8,14 +8,14 @@ import { RenderService } from '../render.service';
 })
 export class RenderComponent implements OnInit {
 
-  @ViewChild('renderArea', {static: true}) renderArea: ElementRef;
+  @ViewChild('renderArea', { static: true }) renderArea: ElementRef;
 
   constructor(private renderService: RenderService) { }
 
   ngOnInit() {
-    this.renderService.getAlgorithm().subscribe(algorithm => {
+    this.renderService.subscribeAlgorithm().subscribe(algorithm => {
       this.renderArea.nativeElement.innerHTML = '';
-      algorithm.modelContainer.appendInto(this.renderArea.nativeElement);
+      algorithm.modelContainer.appendRenderArea(this.renderArea.nativeElement);
     });
   }
 }

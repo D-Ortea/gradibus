@@ -16,6 +16,13 @@
 
 :host ::ng-deep .log-rendering {
   border: 1px solid black;
+  height: 11rem;
+  overflow: scroll;
+}
+
+:host ::ng-deep .tree-circle {
+  fill: white;
+  stroke: black;
 }
 
 @keyframes colorBackAndForth {
@@ -28,5 +35,4 @@
   100% {
     fill: black;
   }
-
 }

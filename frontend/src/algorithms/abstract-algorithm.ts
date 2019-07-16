@@ -1,5 +1,5 @@
 import { Algorithm } from './algorithm';
-import { ModelContainer } from 'src/app/renderers/model-container';
+import { ModelContainer } from 'src/app/models/model-container';
 import { ExecutionContextService } from 'src/app/execution-context.service';
 
 export abstract class AbstractAlgorithm implements Algorithm {

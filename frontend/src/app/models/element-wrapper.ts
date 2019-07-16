@@ -1,4 +1,4 @@
-export class Item {
+export class ElementWrapper {
   val: any;
 
   constructor(
@@ -11,7 +11,7 @@ export class Item {
   }
 
   copy() {
-    return new Item(this.value, this.marked, this.changed, this.id);
+    return new ElementWrapper(this.value, this.marked, this.changed, this.id);
   }
 
   reset() {

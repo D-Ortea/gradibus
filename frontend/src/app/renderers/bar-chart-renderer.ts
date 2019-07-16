@@ -1,5 +1,5 @@
 import { Renderer } from './renderer';
-import { Item } from '../models/Item';
+import { ElementWrapper } from '../models/element-wrapper';
 import * as d3 from 'd3';
 
 export class BarChartRenderer implements Renderer {
@@ -26,7 +26,7 @@ export class BarChartRenderer implements Renderer {
     this.arrayGroup = this.svg.append('g').attr('class', 'array-group');
   }
 
-  render(array: Item[], animationSpeed: number): void {
+  render(array: ElementWrapper[], animationSpeed: number): void {
     this.transition = d3.transition().duration(animationSpeed / 2);
     this.calculateXandYscales(array);
 
@@ -37,7 +37,7 @@ export class BarChartRenderer implements Renderer {
       );
   }
 
-  private calculateXandYscales(array: Item[]) {
+  private calculateXandYscales(array: ElementWrapper[]) {
     const ids = array.map(el => el.getId());
     this.xScale = d3.scaleBand().domain(ids)
       .range([this.margin.left, this.width - this.margin.right]).padding(0.1);
@@ -55,7 +55,7 @@ export class BarChartRenderer implements Renderer {
 
   private moveBarToPosition(g) {
     g.transition(this.transition).attr('transform',
-      (d: Item) =>
+      (d: ElementWrapper) =>
         `translate(${this.xScale(d.getId())}, ${this.yScale(d.value)})`);
   }
 
@@ -65,7 +65,7 @@ export class BarChartRenderer implements Renderer {
   }
 
   private appendText(g) {
-    const text = g.append('text').text((d: Item) => d.value);
+    const text = g.append('text').text((d: ElementWrapper) => d.value);
     this.updateTextPosition(text);
   }
 
@@ -75,21 +75,21 @@ export class BarChartRenderer implements Renderer {
   }
 
   private updateRectangleDimensions(rect) {
-    rect.attr('height', (d: Item) => this.yScale(0) - this.yScale(d.value))
+    rect.attr('height', (d: ElementWrapper) => this.yScale(0) - this.yScale(d.value))
       .attr('width', this.xScale.bandwidth());
   }
 
   private updateBar(update) {
     update.attr('class', (d) => this.parseClass(d))
       .transition(this.transition).attr('transform',
-        (d: Item) =>
+        (d: ElementWrapper) =>
           `translate(${this.xScale(d.getId())}, ${this.yScale(d.value)})`);
 
     this.updateRectangleDimensions(update.select('rect'));
     this.updateTextPosition(update.select('text'));
   }
 
-  private parseClass(cell: Item) {
+  private parseClass(cell: ElementWrapper) {
     return `${cell.changed ? 'swap-bar' : ''} ${cell.marked ? 'mark-bar' : ''}`
       .trim();
   }

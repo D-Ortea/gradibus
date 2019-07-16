@@ -8,7 +8,7 @@ import { AlgorithmService } from '../algorithm.service';
 })
 export class IndexComponent implements OnInit {
 
-  tags =  [...new Set(this.algoService.algorithms.reduce((acc, algo) => acc = [...acc, ...algo.tags], []))];
+  tags: any[];
   tagFilters = [];
   searchTerm = '';
   tagsVisible = false;
@@ -17,7 +17,11 @@ export class IndexComponent implements OnInit {
 
   constructor(
     private algoService: AlgorithmService
-  ) { }
+  ) {
+    this.tags = [...new Set(this.algoService.algorithms.reduce(
+      (acc, algo) => acc = [...acc, ...algo.tags], [])
+    )];
+  }
 
   ngOnInit() {
   }
@@ -53,7 +57,7 @@ export class IndexComponent implements OnInit {
     const applyTagFilters = el => this.tagFilters
       .find(tag => el.tags.includes(tag)) || this.tagFilters.length === 0;
 
-    this.filteredAlgorithms = algorithms.filter(el => includesTerm(el.name) 
+    this.filteredAlgorithms = algorithms.filter(el => includesTerm(el.name)
       || tagsIncludeTerm(el)).filter(el => applyTagFilters(el));
   }
 

@@ -1,4 +1,4 @@
-import { Model } from '../models/model';
+import { Model } from './model';
 
 export class ModelContainer {
   models: [string, Model][];
@@ -35,13 +35,13 @@ export class ModelContainer {
   }
 
   setData(data: any[]) {
-    for (let i = 0; i <  data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
       if (!this.models[i]) { continue; }
       this.models[i][1].setData(data[i]);
     }
   }
 
-  appendInto(elem: HTMLElement) {
+  appendRenderArea(elem: HTMLElement) {
     for (const [_, model] of this.models) {
       elem.append(model.renderer.renderElement);
     }

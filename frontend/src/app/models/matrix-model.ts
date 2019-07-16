@@ -1,10 +1,10 @@
 import { Model } from './model';
 import { MatrixRenderer } from '../renderers/matrix-renderer';
-import { Item } from './Item';
+import { ElementWrapper } from './element-wrapper';
 
 export class MatrixModel implements Model {
 
-  private matrix: Item[][];
+  private matrix: ElementWrapper[][];
 
   renderer: MatrixRenderer;
 
@@ -14,22 +14,22 @@ export class MatrixModel implements Model {
   }
 
   initialize(array: any[]): void {
-    this.matrix = array.map(row => row.map((cell: any) => new Item(cell)));
+    this.matrix = array.map(row => row.map((cell: any) => new ElementWrapper(cell)));
   }
 
   reset(): void {
     this.matrix.forEach(row => row.forEach(cell => cell.reset()));
   }
 
-  getData(): Item[][] {
+  getData(): ElementWrapper[][] {
     return this.matrix;
   }
 
-  setData(newMatrix: Item[][]): void {
+  setData(newMatrix: ElementWrapper[][]): void {
     this.matrix = newMatrix;
   }
 
-  getCopy(data?: Item[][]): Item[][] {
+  getCopy(data?: ElementWrapper[][]): ElementWrapper[][] {
     const matrix = data || this.matrix;
     return matrix.map(row => row.map(cell => cell.copy()));
   }

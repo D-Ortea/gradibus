@@ -9,9 +9,9 @@ import { Options } from 'src/app/Options';
   styleUrls: ['./binary-search-tree-input.component.css']
 })
 export class BinarySearchTreeInputComponent extends InputComponent implements OnInit {
-  createValues = '5,6';
+  createValues = '10, 5, 3, 8, 20';
   searchValue = 5;
-  insertValues = '7,4';
+  insertValues = '13, 24';
 
   bst: BinarySearchTree;
 

@@ -1,20 +1,12 @@
-.index-logo {
-  text-align: center;
-}
-
-.index-logo-title {
-  font-size: 5rem;
-  margin-bottom: 0;
-}
-
-.index-logo-subtitle {
-  color: rgba(32,33,36,0.7);
-  font-size: 1.2rem;
-  margin-top: 0;
-}
-
 .algos {
   text-align: center;
+}
+
+.algo-list {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  margin: 3rem auto 0 auto;
 }
 
 .algo-search-bar {
@@ -38,6 +30,21 @@
   outline: none;
   padding: 0;
   width: 27rem;
+}
+
+.index-logo {
+  text-align: center;
+}
+
+.index-logo-title {
+  font-size: 5rem;
+  margin-bottom: 0;
+}
+
+.index-logo-subtitle {
+  color: rgba(32,33,36,0.7);
+  font-size: 1.2rem;
+  margin-top: 0;
 }
 
 .tag-filter-list {
@@ -115,11 +122,4 @@
 .tag:hover {
   background-color: orangered;
   cursor: pointer;
-}
-
-.algo-list {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: flex-start;
-  margin-top: 3rem;
 }

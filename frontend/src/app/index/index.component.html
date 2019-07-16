@@ -1,30 +1,31 @@
 <div class="index-logo">
   <h1 class="index-logo-title">Gradibus</h1>
-  <h2 class="index-logo-subtitle">Learning algorithms through interactive interfaces</h2>
+  <h2 class="index-logo-subtitle">Learning algorithms through interactive
+    interfaces</h2>
 </div>
 <div class="algos">
-    <div class="algo-search-bar" #searchBar>
-      <input type="text" name="algo-search" id="algo-search" placeholder="search"
-        [(ngModel)]="searchTerm" 
-        (focus)="focusSearchBar(searchBar)"
-        (blur)="blurSearchBar(searchBar)"
-        (input)="filter()">
-      <div class="tag-button" (click)="showTags()">
-        tags
-      </div>
+  <div class="algo-search-bar" #searchBar>
+    <input type="text" name="algo-search" id="algo-search" placeholder="search"
+      [(ngModel)]="searchTerm" (focus)="focusSearchBar(searchBar)"
+      (blur)="blurSearchBar(searchBar)" (input)="filter()">
+    <div class="tag-button" (click)="showTags()">
+      tags
     </div>
-    <div class="tag-filter-list">
-      <div *ngFor="let tag of tagFilters" class="tag-filter">
-        <div class="tag-text">{{tag}}</div>
-        <div class="tag-remove-filter" (click)="removeFilter(tag)">x</div>
-      </div>
+  </div>
+  <div class="tag-filter-list">
+    <div *ngFor="let tag of tagFilters" class="tag-filter">
+      <div class="tag-text">{{tag}}</div>
+      <div class="tag-remove-filter" (click)="removeFilter(tag)">x</div>
     </div>
-    <div *ngIf="tagsVisible" class="tag-list">
-      <div *ngFor="let tag of tags" class="tag" (click)="addFilter(tag)">{{tag}}</div>
+  </div>
+  <div *ngIf="tagsVisible" class="tag-list">
+    <div *ngFor="let tag of tags" class="tag" (click)="addFilter(tag)">{{tag}}
     </div>
-    <ul class="algo-list">
-      <div *ngFor="let algo of filteredAlgorithms" class="algo-card-wrapper">
-        <app-algo-card [algorithm]="algo" (tagfilter)="addFilter($event)"></app-algo-card>
-      </div>
-    </ul>
+  </div>
+  <ul class="algo-list">
+    <div *ngFor="let algo of filteredAlgorithms" class="algo-card-wrapper">
+      <app-algo-card [algorithm]="algo" (tagfilter)="addFilter($event)">
+      </app-algo-card>
+    </div>
+  </ul>
 </div>

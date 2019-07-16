@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AlgorithmService } from '../algorithm.service';
+import { AlgorithmService, AlgorithmMetadata } from '../algorithm.service';
 import { ExecutionContextService } from '../execution-context.service';
 import { RenderService } from '../render.service';
 
@@ -10,19 +10,17 @@ import { RenderService } from '../render.service';
   styleUrls: ['./player.component.css']
 })
 export class PlayerComponent implements OnInit {
-  algorithmInput;
 
+  algorithmInput: AlgorithmMetadata;
   speed: number;
   step: number;
   maxStep: number;
   paused: boolean;
-  temp: [number, number];
 
   constructor(
     private route: ActivatedRoute,
     private algoService: AlgorithmService,
     private context: ExecutionContextService,
-    private renderService: RenderService
   ) {
     this.speed = 1000;
     this.step = 0;
@@ -31,11 +29,10 @@ export class PlayerComponent implements OnInit {
   }
 
   ngOnInit() {
-    const algoName = this.route.snapshot.paramMap.get('algo');
+    const algoName = this.route.parent.snapshot.paramMap.get('algo');
     this.algorithmInput = this.algoService.getAlgorithm(algoName).component;
     this.subscribeToSteps();
-    console.log('Player Sent notification!!!');
-    this.renderService.notifyPlayerReady(true);
+    // this.renderService.sendMode('play');
   }
 
   subscribeToSteps() {

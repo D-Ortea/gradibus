@@ -10,5 +10,6 @@ export class LoggerRenderer implements Renderer {
 
   render(text: string): void {
     this.renderElement.innerHTML = text;
+    this.renderElement.scrollBy(0, this.renderElement.scrollHeight);
   }
 }

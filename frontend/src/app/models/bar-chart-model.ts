@@ -1,11 +1,11 @@
 import { Model } from './model';
 import { Renderer } from '../renderers/renderer';
-import { Item } from './Item';
+import { ElementWrapper } from './element-wrapper';
 import { BarChartRenderer } from '../renderers/bar-chart-renderer';
 
 export class BarChartModel implements Model {
 
-  private array: Item[];
+  private array: ElementWrapper[];
 
   renderer: Renderer;
 
@@ -15,22 +15,22 @@ export class BarChartModel implements Model {
   }
 
   initialize(arr: any[]): void {
-    this.array = arr.map(el => new Item(el));
+    this.array = arr.map(el => new ElementWrapper(el));
   }
 
   reset(): void {
     this.array.forEach(el => el.reset());
   }
 
-  getData(): Item[] {
+  getData(): ElementWrapper[] {
     return this.array;
   }
 
-  setData(arr: Item[]): void {
+  setData(arr: ElementWrapper[]): void {
     this.array = arr;
   }
 
-  getCopy(arr?: Item[]) {
+  getCopy(arr?: ElementWrapper[]) {
     const array = arr || this.array;
     return array.map(el => el.copy());
   }
@@ -50,7 +50,7 @@ export class BarChartModel implements Model {
   }
 
   insert(value: any, i: number) {
-    this.array.splice(i, 0, new Item(value));
+    this.array.splice(i, 0, new ElementWrapper(value));
   }
 
   remove(i: number) {

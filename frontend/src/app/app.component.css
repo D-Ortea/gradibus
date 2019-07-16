@@ -1,7 +1,17 @@
+.app-logo {
+  color: var(--main-color);
+  font-family: monospace;
+  font-size: 1.5rem;
+}
+
 .body-flex {
   display: flex;
   height: 100%;
   flex-direction: column;
+}
+
+.footer {
+  margin-top: auto;
 }
 
 .header nav, .footer {
@@ -19,13 +29,20 @@
   justify-content: space-between;
 }
 
-.footer {
-  margin-top: auto;
+header * {
+  letter-spacing: 0.02em;
 }
 
 .login-btn, .signup-btn {
-  background-color: var(--secondary-bg-color);
+  background-color: transparent;
+  border: none;
   color: var(--main-color);
+  font-size: 1.1rem;
+  margin: 0 15px 5px 5px;
+}
+
+.login-btn:hover, .signup-btn:hover {
+  color: orangered;
   cursor: pointer;
 }
 

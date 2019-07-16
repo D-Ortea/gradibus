@@ -1,5 +1,5 @@
 import { Renderer } from './renderer';
-import { Item } from '../models/item';
+import { ElementWrapper } from '../models/element-wrapper';
 import * as d3 from 'd3';
 
 export class MatrixRenderer implements Renderer {
@@ -15,7 +15,7 @@ export class MatrixRenderer implements Renderer {
     this.renderElement.appendChild(document.createElement('tbody'));
   }
 
-  render(matrix: Item[][]) {
+  render(matrix: ElementWrapper[][]) {
     d3.select(this.renderElement).selectAll('tr').data(matrix).join('tr')
       .selectAll('td').data(d => d).join(
         enter => enter.append('td').text(cell => cell.value),
@@ -32,7 +32,7 @@ export class MatrixRenderer implements Renderer {
     update.text(cell => cell.value);
   }
 
-  private parseClass(cell: Item) {
+  private parseClass(cell: ElementWrapper) {
     return `${cell.changed ? 'changed' : ''} ${cell.marked ? 'marked' : ''}`
       .trim();
   }

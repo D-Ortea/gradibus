@@ -19,6 +19,10 @@ import { InsertionSortInputComponent } from './input-components/insertion-sort-i
 import { SortInputComponent } from './input-components/sort-input/sort-input.component';
 import { MergeSortInputComponent } from './input-components/merge-sort-input/merge-sort-input.component';
 import { QuicksortInputComponent } from './input-components/quicksort-input/quicksort-input.component';
+import { ModeComponent } from './mode/mode.component';
+import { TutorialComponent } from './tutorial/tutorial.component';
+import { AssessmentComponent } from './assessment/assessment.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +41,10 @@ import { QuicksortInputComponent } from './input-components/quicksort-input/quic
     SortInputComponent,
     MergeSortInputComponent,
     QuicksortInputComponent,
+    ModeComponent,
+    TutorialComponent,
+    AssessmentComponent,
+    PageNotFoundComponent,
 
   ],
   imports: [

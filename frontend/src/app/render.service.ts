@@ -9,8 +9,7 @@ import { Renderer } from 'src/app/renderers/renderer';
 export class RenderService {
 
   algorithmSubject = new Subject<any>();
-  rendererSubject = new Subject<any>();
-  playerSubject = new Subject<any>();
+  modeSubject = new Subject<string>();
 
   constructor() { }
 
@@ -18,23 +17,17 @@ export class RenderService {
     this.algorithmSubject.next(algorithm);
   }
 
-  getAlgorithm(): Observable<Algorithm> {
+  subscribeAlgorithm(): Observable<Algorithm> {
     return this.algorithmSubject.asObservable();
   }
 
-  sendRenderer(renderer: Renderer) {
-    this.rendererSubject.next(renderer);
+  sendMode(mode: string) {
+    this.modeSubject.next(mode);
   }
 
-  getRenderer(): Observable<Renderer> {
-    return this.rendererSubject.asObservable();
+  subscribeMode(): Observable<string> {
+    return this.modeSubject.asObservable();
   }
 
-  subscribePlayerReady() {
-    return this.playerSubject.asObservable();
-  }
 
-  notifyPlayerReady(ready: boolean) {
-    this.playerSubject.next(ready);
-  }
 }
