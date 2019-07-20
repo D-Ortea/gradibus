@@ -83,6 +83,18 @@ export class PlayerComponent implements OnInit {
     if (this.step !== 0) { this.step--; }
     this.changeStep();
   }
+
+  lastStep() {
+    if (this.step === this.maxStep) { return; }
+    this.step = this.maxStep; 
+    this.changeStep();
+  }
+
+  firstStep() {
+    if (this.step === 0) { return; }
+    this.step = 0;
+    this.changeStep();
+  }
 }
 ///////// PROBLEM 1 /////////////////
 // 10

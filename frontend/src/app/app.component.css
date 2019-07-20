@@ -5,9 +5,6 @@
 }
 
 .body-flex {
-  display: flex;
-  height: 100%;
-  flex-direction: column;
 }
 
 .footer {
@@ -47,5 +44,4 @@ header * {
 }
 
 .main {
-  min-width: 500px;
 }

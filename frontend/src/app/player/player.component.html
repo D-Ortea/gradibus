@@ -1,33 +1,56 @@
-<div class="player">
-  <div class="player-btn">
-    <img [hidden]="!paused" src="/assets/player-controls/play-50.png"
-      alt="play button" (click)="play()">
-    <img [hidden]="paused" src="/assets/player-controls/pause-50.png"
-      alt="pause button" (click)="pause()">
-  </div>
-  <div>
-    <input type="range" min="0" max="2000" class="speed-slider slider"
-      [(ngModel)]="speed" (input)="changeSpeed()">
-  </div>
-  <div class="player-btn">
-    <img src="/assets/player-controls/previous-50.png" alt="previous step"
-      (click)="previousStep()">
-  </div>
-  <div>
-    <label for="">{{step}}</label>
-    <input type="range" min="0" [max]="maxStep" class="step-slider slider"
-      [(ngModel)]="step" (input)="changeStep()">
-  </div>
-  <div class="player-btn">
-    <img src="/assets/player-controls/next-50.png" alt="next step"
-      (click)="nextStep()">
+<div class="play-mode">
+  <app-render></app-render>
+
+  <div class="player">
+    <ng-container *ngComponentOutlet="algorithmInput"></ng-container>
+    <div class="player-controls">
+      <div [hidden]="!paused" class="player-btn" (click)="play()">
+        <svg class="icon">
+          <use xlink:href="#play-button" />
+        </svg>
+      </div>
+      <div [hidden]="paused" class="player-btn" (click)="pause()">
+        <svg class="icon">
+          <use xlink:href="#pause-button" />
+        </svg>
+      </div>
+      <div>
+        <input type="range" min="0" max="2000" class="speed-slider slider" [(ngModel)]="speed" (input)="changeSpeed()">
+      </div>
+      <div>
+        <svg class="icon">
+          <use xlink:href="#wheel" />
+        </svg>
+      </div>
+      <div class="back-controls">
+        <div class="player-btn" (click)="firstStep()">
+          <svg class="icon">
+            <use xlink:href="#previous" />
+          </svg>
+        </div>
+        <div class="player-btn" (click)="previousStep()">
+          <svg class="icon rewind">
+            <use xlink:href="#rewind" />
+          </svg>
+        </div>
+      </div>
+      <div>
+        <label>{{step}}</label>
+        <input type="range" min="0" [max]="maxStep" class="step-slider slider" [(ngModel)]="step"
+          (input)="changeStep()">
+      </div>
+      <div class="forward-controls">
+        <div class="player-btn" (click)="nextStep()">
+          <svg class="icon forward">
+            <use xlink:href="#play" />
+          </svg>
+        </div>
+        <div class="player-btn" (click)="lastStep()">
+          <svg class="icon">
+            <use xlink:href="#next" />
+          </svg>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-
-<ng-container *ngComponentOutlet="algorithmInput"></ng-container>
-
-<p *ngIf="solution">
-  {{ solution }}
-</p>
-
-<app-render></app-render>

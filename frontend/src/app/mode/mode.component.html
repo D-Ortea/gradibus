@@ -1,8 +1,9 @@
-<nav #modes class="mode-nav">
-  <a [class.selected]="modeSelected === 'tutorial'"
-    routerLink="tutorial">Tutorial</a>
-  <a [class.selected]="modeSelected === 'play'" routerLink="play">Play</a>
-  <a [class.selected]="modeSelected === 'test'" routerLink="test">Test</a>
-</nav>
-<router-outlet (activate)=onActivate($event)>
-</router-outlet>
+<div class="mode-selector">
+  <nav #modes class="mode-nav">
+    <a [class.selected]="modeSelected === 'tutorial'" routerLink="tutorial">Tutorial</a>
+    <a [class.selected]="modeSelected === 'play'" routerLink="play">Play</a>
+    <a [class.selected]="modeSelected === 'test'" routerLink="test">Test</a>
+  </nav>
+  <router-outlet (activate)=onActivate($event)>
+  </router-outlet>
+</div>
