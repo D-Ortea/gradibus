@@ -2,22 +2,25 @@
   <app-render></app-render>
 
   <div class="player">
-    <ng-container *ngComponentOutlet="algorithmInput"></ng-container>
+    <div class="input-area">
+      <ng-container *ngComponentOutlet="algorithmInput"></ng-container>
+    </div>
     <div class="player-controls">
-      <div [hidden]="!paused" class="player-btn" (click)="play()">
+      <div id="play-btn" *ngIf="paused" class="player-btn" (click)="play()">
         <svg class="icon">
           <use xlink:href="#play-button" />
         </svg>
       </div>
-      <div [hidden]="paused" class="player-btn" (click)="pause()">
+      <div id="pause-btn" *ngIf="!paused" class="player-btn" (click)="pause()">
         <svg class="icon">
           <use xlink:href="#pause-button" />
         </svg>
       </div>
-      <div>
-        <input type="range" min="0" max="2000" class="speed-slider slider" [(ngModel)]="speed" (input)="changeSpeed()">
+      <div class="speed-slider-container">
+        <input type="range" min="0" max="2000" class="speed-slider slider"
+          [(ngModel)]="speed" (input)="changeSpeed()">
       </div>
-      <div>
+      <div id="speedometer">
         <svg class="icon">
           <use xlink:href="#wheel" />
         </svg>
@@ -34,10 +37,10 @@
           </svg>
         </div>
       </div>
-      <div>
+      <div class="step-slider-container">
         <label>{{step}}</label>
-        <input type="range" min="0" [max]="maxStep" class="step-slider slider" [(ngModel)]="step"
-          (input)="changeStep()">
+        <input type="range" min="0" [max]="maxStep" class="step-slider slider"
+          [(ngModel)]="step" (input)="changeStep()">
       </div>
       <div class="forward-controls">
         <div class="player-btn" (click)="nextStep()">

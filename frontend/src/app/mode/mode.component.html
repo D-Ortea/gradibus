@@ -1,9 +1,24 @@
-<div class="mode-selector">
+<div class="mode-page">
   <nav #modes class="mode-nav">
-    <a [class.selected]="modeSelected === 'tutorial'" routerLink="tutorial">Tutorial</a>
+    <a [class.selected]="modeSelected === 'tutorial'"
+      routerLink="tutorial">Tutorial</a>
     <a [class.selected]="modeSelected === 'play'" routerLink="play">Play</a>
     <a [class.selected]="modeSelected === 'test'" routerLink="test">Test</a>
   </nav>
-  <router-outlet (activate)=onActivate($event)>
-  </router-outlet>
+  <div class="mode-selector">
+    <div class="side-menu" *ngIf="sideMenuOpened">
+      <app-algorithm-side-list [modeSelected]="modeSelected"
+        (changeAlgo)="changeAlgo($event)">
+      </app-algorithm-side-list>
+    </div>
+    <div #menuBtn class="menu-btn" (click)="openSideMenu(menuBtn)">
+      <svg class="icon">
+        <use xlink:href="#menu" />
+      </svg>
+    </div>
+    <div (click)="hideSideMenu(menuBtn)">
+      <router-outlet (activate)="onActivate($event)">
+      </router-outlet>
+    </div>
+  </div>
 </div>

@@ -13,12 +13,12 @@ export class IndexComponent implements OnInit {
   searchTerm = '';
   tagsVisible = false;
 
-  filteredAlgorithms = Array.from(this.algoService.algorithms);
+  filteredAlgorithms = Array.from(this.algoService.getAlgorithms());
 
   constructor(
     private algoService: AlgorithmService
   ) {
-    this.tags = [...new Set(this.algoService.algorithms.reduce(
+    this.tags = [...new Set(this.algoService.getAlgorithms().reduce(
       (acc, algo) => acc = [...acc, ...algo.tags], [])
     )];
   }

@@ -11,6 +11,8 @@ import { RenderService } from '../render.service';
 })
 export class PlayerComponent implements OnInit {
 
+  private subscription;
+
   algorithmInput: AlgorithmMetadata;
   speed: number;
   step: number;
@@ -29,14 +31,16 @@ export class PlayerComponent implements OnInit {
   }
 
   ngOnInit() {
-    const algoName = this.route.parent.snapshot.paramMap.get('algo');
-    this.algorithmInput = this.algoService.getAlgorithm(algoName).component;
-    this.subscribeToSteps();
-    // this.renderService.sendMode('play');
+    this.route.parent.paramMap.subscribe(paramMap => {
+      const algoName = paramMap.get('algo');
+      console.log(algoName);
+      this.algorithmInput = this.algoService.getAlgorithm(algoName).component;
+      if (!this.subscription) { this.subscribeToSteps(); }
+    });
   }
 
   subscribeToSteps() {
-    this.context.subscribeSteps().subscribe(steps => {
+    this.subscription = this.context.subscribeSteps().subscribe(steps => {
       console.log(`Step notified: ${steps}`);
       this.step = steps;
       this.paused = this.step === 0 || this.step === this.maxStep;
@@ -86,7 +90,7 @@ export class PlayerComponent implements OnInit {
 
   lastStep() {
     if (this.step === this.maxStep) { return; }
-    this.step = this.maxStep; 
+    this.step = this.maxStep;
     this.changeStep();
   }
 

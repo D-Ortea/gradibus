@@ -1,0 +1,17 @@
+<div class="algo-side-list">
+  <div class="side-list-search-bar">
+    <input type="text" name="algo-search" id="side-list-search-bar"
+      placeholder="search" [(ngModel)]="searchTerm" (input)="filter()">
+  </div>
+  <li *ngFor="let category of filteredCategories; let i = index">
+    <div class="category-name" (click)="fold(i)">
+      {{ category.name }} <span>▼</span>
+    </div>
+    <ul *ngIf="categoriesFolded[i].folded">
+      <li *ngFor="let algo of category.algorithms"
+        (click)="changeAlgo.emit(algo.name)" class="algo-side-list-algortithm">
+        {{ algo.name }}
+      </li>
+    </ul>
+  </li>
+</div>

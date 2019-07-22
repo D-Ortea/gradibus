@@ -23,6 +23,7 @@ import { ModeComponent } from './mode/mode.component';
 import { TutorialComponent } from './tutorial/tutorial.component';
 import { AssessmentComponent } from './assessment/assessment.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { AlgorithmSideListComponent } from './algorithm-side-list/algorithm-side-list.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     TutorialComponent,
     AssessmentComponent,
     PageNotFoundComponent,
+    AlgorithmSideListComponent
 
   ],
   imports: [
@@ -54,13 +56,13 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     AppRoutingModule
   ],
   entryComponents: [
-     KnapsackInputComponent,
-     BinarySearchTreeInputComponent,
-     BubbleSortInputComponent,
-     InsertionSortInputComponent,
-     SelectionSortInputComponent,
-     MergeSortInputComponent,
-     QuicksortInputComponent
+    KnapsackInputComponent,
+    BinarySearchTreeInputComponent,
+    BubbleSortInputComponent,
+    InsertionSortInputComponent,
+    SelectionSortInputComponent,
+    MergeSortInputComponent,
+    QuicksortInputComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

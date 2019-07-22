@@ -1,0 +1,16 @@
+.algo-side-list {
+  background-color: var(--main-bg-color);
+  list-style: none;
+}
+
+.category-name {
+  background: #111;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.algo-side-list-algortithm {
+  cursor: pointer;
+}

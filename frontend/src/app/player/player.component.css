@@ -1,33 +1,16 @@
+.back-controls , .forward-controls {
+  align-items: center;
+  display: inline-flex;
+  flex-direction: row;
+}
+
 .icon {
   height: 25px;
   width: 25px;
 }
 
-.rewind, .forward {
-  height: 35px;
-  width: 35px;
-}
-
-.inputs { 
-  list-style: none;
-}
-
-.inputs, .labels {
-  display: inline-block;
-}
-
-.labels li {
-  font-size: 20px;
-}
-
-.player-btn {
-  cursor: pointer;
-  outline: none;
-}
-
-.player-btn:hover {
-  background: #eee;
-  cursor: pointer;
+.input-area {
+  width: 300px;
 }
 
 .play-btn:active {
@@ -44,23 +27,46 @@
   margin: 3px;
 }
 
+.player-btn {
+  cursor: pointer;
+  outline: none;
+}
+
+.player-btn, .speed-slider-container, .step-slider-container {
+  display: inline-block;
+}
+
+.player-btn:hover {
+  background: #eee;
+  cursor: pointer;
+}
+
 .player-controls {
+  align-items: center;
   display: grid;
-  grid-template-columns: repeat(auto-fit, 1fr 1fr 1fr);
-  grid-template-rows: repeat(auto-fit, 1fr);
+  grid-gap: 0 5px;
+  grid-template-columns: minmax(80px, 1fr) minmax(140px, 2fr) minmax(80px, 1fr);
+  justify-items: center;
 }
 
-.back-controls , .forward-controls {
-  display: flex;
-  flex-direction: row;
+.rewind, .forward {
+  height: 35px;
+  width: 35px;
 }
 
-.center {
-  display: flex;
-  justify-content: space-evenly;
+.slider {
+  width: 140px;
 }
 
-#pseudocode {
+#play-btn, #pause-btn {
+  justify-self: right;
+}
+
+#speedometer {
+  justify-self: left;
+}
+
+/* #pseudocode {
   background: #333;
   border: 3px solid #999;
   list-style: none;
@@ -81,54 +87,4 @@
 
 .code-highlight {
   background: #355C7D;
-}
-
-td {
-  padding: 5px;
-}
-
-.input-form {
-  display: flex;
-  align-items: center;
-}
-
-.labels, .inputs, .buttons {
-  list-style: none;
-  padding: 6px;
-}
-
-.node {
-  fill: white;
-  stroke: black;
-  stroke-width: 2px;
-}
-
-.hidden-node {
-  fill: transparent;
-}
-
-.node-marked, .edge-marked {
-  stroke: orange;
-}
-
-.node-inserted {
-  stroke: greenyellow;
-}
-
-.node-deleted {
-  stroke: tomato;
-}
-
-.node-text {
-  text-anchor: center;
-  font-size: 15px;
-  font-family: monospace;
-  fill: black;
-}
-
-.link {
-  stroke: black;
-  fill: none;
-  stroke-width: 1.5;
-  stroke-opacity: 0.4;
-}
+} */

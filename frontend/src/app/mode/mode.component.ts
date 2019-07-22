@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet, ActivatedRoute } from '@angular/router';
+import { RouterOutlet, ActivatedRoute, Router } from '@angular/router';
 import { PlayerComponent } from '../player/player.component';
 import { TutorialComponent } from '../tutorial/tutorial.component';
 
@@ -11,9 +11,11 @@ import { TutorialComponent } from '../tutorial/tutorial.component';
 export class ModeComponent implements OnInit {
 
   modeSelected = 'play';
+  sideMenuOpened = false;
 
   constructor(
-    private router: RouterOutlet,
+    private router: Router,
+    private routerOutlet: RouterOutlet,
     private route: ActivatedRoute) { }
 
   ngOnInit() { }
@@ -22,10 +24,24 @@ export class ModeComponent implements OnInit {
     this.modeSelected = this.parseEvent(event);
   }
 
+  changeAlgo(algoName: string) {
+    this.router.navigateByUrl(`algorithms/${algoName}/${this.modeSelected}`);
+  }
+
   private parseEvent(event) {
     return event instanceof PlayerComponent ? 'play'
       : event instanceof TutorialComponent ? 'tutorial'
         : 'test';
   }
+
+  private openSideMenu(btn: HTMLDivElement) {
+    btn.classList.toggle('open');
+    this.sideMenuOpened = !this.sideMenuOpened;
+  }
+
+  private hideSideMenu(btn: HTMLDivElement) {
+    if (this.sideMenuOpened) { this.openSideMenu(btn); }
+  }
+
 
 }

@@ -3,6 +3,7 @@
   --main-color: #83d0f2;
   --accent-color: #83d0f2;
   --main-bg-color: #222222;
+  --main-bg-color-alpha: rgba(34, 34, 34, 0.93);
   --secondary-bg-color: rgba(22, 104, 159, 0.2);
 }
 
@@ -41,10 +42,6 @@ a:visited {
 	color: rgb(0,80,160);
 }
 
-label {
-	display: block;
-}
-
 input, button, select, textarea {
 	font-family: inherit;
 	font-size: inherit;
@@ -61,6 +58,10 @@ input:disabled {
 
 input[type="range"] {
 	height: 0;
+}
+
+input[type=range]::-moz-focus-outer {
+  border: 0;
 }
 
 button {
