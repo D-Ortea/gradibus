@@ -1,2 +1,2 @@
-# gradibus
-This is a project focused on helping learners understand how algorithms work by providing a visual interface to visualize the algorithm's step-by-step progress.
+# Gradibus
+This project aims to help students grasp how algorithms work by offering a graphical user interface that serves as a visual aid and allows them to see the step-by-step process of the algorithms as they run.
